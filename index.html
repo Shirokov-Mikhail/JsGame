@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Game</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: dimgray;
+        }
+        canvas {
+            display: block;
+            width: 99.5%;
+            height:  80%;
+            background-color: black;
+            border-bottom: 2.5px;
+            border-style: solid;
+            border-color: red;
+        }
+        #startScreen{
+            display: none;
+            background-image: url("startScreenBackground.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            align-items: center;
+            width: 40%;
+            height: 20%;
+            justify-content: center;
+        }
+        .base{
+            display: flex;
+            background-color: dimgray;
+            color: white;
+            justify-content: center;
+
+        }
+        .base-text{
+            padding: 20px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+        .endScreen{
+            display: none;
+            background-image: url("startScreenBackground.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            align-items: center;
+            width: 40%;
+            height: 20%;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <div id="startScreen">
+        <h1 class="text">Супер Летун 1</h1>
+        <label for="inputText">Введи имя</label>
+        <input type="text" id="inputText"><br>
+        <button id="startButton"></button>
+    </div>
+    <div id="gameScreen">
+        <canvas id="canvas" width="1920" height="900"></canvas>
+
+        <div class="base">
+            <h2 class="base-text" id="hp">100%</h2>
+            <h2 class="base-text" id="fuel">100%</h2>
+            <h2 class="base-text" id="speed">1 Cм/Год</h2>
+        </div>
+    </div>
+    <div class="endScreen">
+        <h1 class="text">Ты наигрался</h1>
+    </div>
+</main>
+<script src="game.js"></script>
+</body>
+</html>
