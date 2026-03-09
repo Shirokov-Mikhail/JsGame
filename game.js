@@ -5,9 +5,9 @@ const speed = document.getElementById("speed");
 const fuel = document.getElementById("fuel");
 const hp = document.getElementById("hp");
 
-const startScreen = document.getElementById("startScreen");
-const endScreen = document.getElementById("endScreen");
-const gameScreen = document.getElementById("gameScreen");
+let startScreen = document.getElementById("startScreen");
+let endScreen = document.getElementById("endScreen");
+let gameScreen = document.getElementById("gameScreen");
 
 
 let speed_text = ' Cм/Год';
@@ -216,14 +216,14 @@ class HelpKit{
         }
         this.start = false
         let image = new Image();
-        image.src = ".png";
+        image.src = "help.png";
         this.cube = {
             x_max: this.x + 40,
             y_max: this.y + 40
         }
         image.onload = () => {
-            this.width = image.width;
-            this.height = image.height;
+            this.width = image.width * 0.1;
+            this.height = image.height * 0.1;
             this.image = image;
             this.cube = {
                 x_max: this.x + this.width,
@@ -231,6 +231,7 @@ class HelpKit{
             }
             this.start = true
         }
+        this.help = 0
 
     }
     update() {
@@ -246,6 +247,22 @@ class HelpKit{
             this.cube.x_max = this.x + 40;
             this.cube.y_max = this.y + 40;
         }
+
+    }
+    check_position(player_box) {
+        this.oneDel = false
+        if ((this.x < player_box.x_max && player_box.x < this.x )|| (this.cube.x_max > player_box.x
+                && this.cube.x_max < player_box.x_max) ||
+            (this.x > player_box.x && this.cube.x_max < player_box.x)) {
+
+            if (this.cube.y_max > player_box.y && this.y < player_box.y) {
+                this.oneDel = true;
+                this.help = 10
+
+
+            }
+        }
+
 
     }
 
@@ -293,7 +310,7 @@ document.addEventListener("keyup", (event) => {
     }
 })
 
-
+const helpbox = [new HelpKit()]
 const player = new Player();
 const invadors = [new InvadorGroup()];
 const fire = [];
@@ -312,6 +329,17 @@ function draw() {
             invadors[i].update()
             invadors[i].check_position(player.cube);
             hp_val -= invadors[i].damage
+
+        }
+        for (let i = 0; i < helpbox.length; i++) {
+            helpbox[i].update()
+            helpbox[i].check_position(player.cube);
+            if (helpbox[i].help != 0 & hp_val + helpbox[i].help <= 100){
+                hp_val += helpbox[i].help
+            }
+            if (helpbox[i].oneDel){
+                helpbox.splice(0, 1);
+            }
 
         }
         if (keys.a & player.x > 0) {
@@ -334,6 +362,8 @@ function draw() {
             fire.push(new Fire());
         }
         if (ticks >= 60 * 8) {
+            helpbox.splice(0, 1);
+            helpbox.push(new HelpKit(player));
             ticks = 0;
             invadors.push(new InvadorGroup());
             invadors[invadors.length - 1].create(48);
@@ -354,6 +384,7 @@ function draw() {
     }else {
         if (end_game){
             endScreen.style.display = "flex";
+            gameScreen.style.display = "none";
         }
     }
 }
