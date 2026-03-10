@@ -4,17 +4,18 @@ const ctx = canvas.getContext("2d");
 const speed = document.getElementById("speed");
 const fuel = document.getElementById("fuel");
 const hp = document.getElementById("hp");
+const money = document.getElementById("money");
 
-let startScreen = document.getElementById("startScreen");
-let endScreen = document.getElementById("endScreen");
-let gameScreen = document.getElementById("gameScreen");
+const startScreen = document.getElementById("startScreen");
+const endScreen = document.getElementById("endScreen");
+const gameScreen = document.getElementById("gameScreen");
 
 
 let speed_text = ' Cм/Год';
 let speed_val = 1;
 let fuel_val = 100;
 let hp_val = 100;
-
+let money_val = 0;
 
 let start_game = true
 let end_game = false
@@ -173,9 +174,7 @@ class InvadorGroup {
             oneDel = false;
             this.damage = 0;
         }
-
     }
-
     clear() {
         this.invadors = [];
     }
@@ -257,9 +256,68 @@ class HelpKit{
 
             if (this.cube.y_max > player_box.y && this.y < player_box.y) {
                 this.oneDel = true;
-                this.help = 10
+                this.help = 20
 
 
+            }
+        }
+
+
+    }
+
+}
+
+class FuelKit{
+    constructor() {
+        this.x = Math.floor(Math.random() * 1701);
+        this.y = 100 * Math.random();
+        this.vel = {
+            x: 0,
+            y: 2
+        }
+        this.start = false
+        let image = new Image();
+        image.src = "fuel.png";
+        this.cube = {
+            x_max: this.x + 40,
+            y_max: this.y + 40
+        }
+        image.onload = () => {
+            this.width = image.width * 0.1;
+            this.height = image.height * 0.1;
+            this.image = image;
+            this.cube = {
+                x_max: this.x + this.width,
+                y_max: this.y + this.height
+            }
+            this.start = true
+        }
+        this.fuel = 0
+
+    }
+    update() {
+        if (this.start){
+            this.x += this.vel.x;
+            this.y += this.vel.y;
+            this.cube.x_max = this.x + this.width;
+            this.cube.y_max = this.y + this.height;
+
+            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+        }
+        else {
+            this.cube.x_max = this.x + 40;
+            this.cube.y_max = this.y + 40;
+        }
+
+    }
+    check_position(player_box) {
+        this.oneDel = false
+        if ((this.x < player_box.x_max && player_box.x < this.x )|| (this.cube.x_max > player_box.x
+                && this.cube.x_max < player_box.x_max) ||
+            (this.x > player_box.x && this.cube.x_max < player_box.x)) {
+            if (this.cube.y_max > player_box.y && this.y < player_box.y) {
+                this.oneDel = true;
+                this.fuel = 20
             }
         }
 
@@ -309,7 +367,7 @@ document.addEventListener("keyup", (event) => {
             break
     }
 })
-
+const fuelbox = [new FuelKit()]
 const helpbox = [new HelpKit()]
 const player = new Player();
 const invadors = [new InvadorGroup()];
@@ -340,7 +398,16 @@ function draw() {
             if (helpbox[i].oneDel){
                 helpbox.splice(0, 1);
             }
-
+        }
+        for (let i = 0; i < fuelbox.length; i++) {
+            fuelbox[i].update()
+            fuelbox[i].check_position(player.cube);
+            if (fuelbox[i].fuel != 0 & fuel_val + fuelbox[i].fuel <= 100){
+                fuel_val += fuelbox[i].fuel
+            }
+            if (fuelbox[i].oneDel){
+                fuelbox.splice(0, 1);
+            }
         }
         if (keys.a & player.x > 0) {
             player.vel.x = -1;
@@ -363,8 +430,11 @@ function draw() {
         }
         if (ticks >= 60 * 8) {
             helpbox.splice(0, 1);
-            helpbox.push(new HelpKit(player));
+            helpbox.push(new HelpKit());
+            fuelbox.splice(0, 1);
+            fuelbox.push(new FuelKit());
             ticks = 0;
+            money_val += 1
             invadors.push(new InvadorGroup());
             invadors[invadors.length - 1].create(48);
         }
@@ -377,6 +447,7 @@ function draw() {
             start_game = false
             end_game = true
         }
+        money.textContent = `${money_val} Монет`
         fuel.textContent = `${fuel_val}%`
         hp.textContent = `${hp_val}%`;
         ticks++;
