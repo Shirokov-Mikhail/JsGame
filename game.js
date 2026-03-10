@@ -64,6 +64,7 @@ class Player {
 
             this.cube.x = this.x;
             this.cube.y = this.y;
+            this.fire_pos = this.x + this.width / 2;
             this.cube.x_max = this.x + this.width;
             this.cube.y_max = this.y + this.height;
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
@@ -127,7 +128,7 @@ class InvadorGroup {
     create(length) {
         for (let i = 0; i < length; i++) {
 
-            this.invadors.push(new Invador(i * 40));
+            this.invadors.push(new Invador(Math.floor(Math.random() * 1921)));
         }
 
         this.len = this.invadors.length;
@@ -150,47 +151,72 @@ class InvadorGroup {
         }
     }
 
-    check_position(player_box) {
-        let oneDel = false
-
-        this.invadors.forEach(invador => {
-            this.index = this.invadors.indexOf(invador);
-            if ((invador.x < player_box.x_max && player_box.x < invador.x )|| (invador.cube.x_max > player_box.x
-                && invador.cube.x_max < player_box.x_max) ||
-                (invador.x > player_box.x && invador.cube.x_max < player_box.x)) {
-
-                if (invador.cube.y_max > player_box.y && invador.y < player_box.y) {
-                    oneDel = true;
-
-                }
-            }
-        })
-
-        if (oneDel) {
-            this.invadors.splice(this.index, 1);
-            this.damage = 1;
-        }
-        else {
-            oneDel = false;
-            this.damage = 0;
+//    check_position(player_box) {
+//        let oneDel = false
+//
+////        this.invadors.forEach(invador => {
+////            this.index = this.invadors.indexOf(invador);
+////            if ((invador.x < player_box.x_max && player_box.x < invador.x )|| (invador.cube.x_max > player_box.x
+////                && invador.cube.x_max < player_box.x_max) ||
+////                (invador.x > player_box.x && invador.cube.x_max < player_box.x)) {
+////
+////                if (invador.cube.y_max > player_box.y && invador.y < player_box.y) {
+////                    oneDel = true;
+////
+////                }
+////            }
+////        })
+//         for (let i = 0; i < this.invadors.length; i++) {
+//            if ((this.invadors[i].x < player_box.x_max && player_box.x < this.invadors[i].x )|| (this.invadors[i].cube.x_max > player_box.x
+//                && this.invadors[i].cube.x_max < player_box.x_max) ||
+//                (this.invadors[i].x > player_box.x && this.invadors[i].cube.x_max < player_box.x)) {
+//                if (this.invadors[i].cube.y_max > player_box.y && this.invadors[i].y < player_box.y) {
+//                    this.invadors.splice(i, 1)
+//                    oneDel = true;
+//
+//        }}}
+//
+//       if (oneDel) {
+//           this.damage = 1;
+//      } else {
+//            oneDel = false;
+//            this.damage = 0;
+//    }
+//    }
+check_position(player_box) {
+    let oneDel = false;
+    this.damage = 0;
+    for (let i = this.invadors.length - 1; i >= 0; i--) {
+        let invador = this.invadors[i];
+        if (player_box.x < invador.cube.x_max &&
+            player_box.x_max > invador.x &&
+            player_box.y < invador.cube.y_max &&
+            player_box.y_max > invador.y) {
+            this.invadors.splice(i, 1);
+            oneDel = true;
         }
     }
+
+    if (oneDel) {
+        this.damage = 1;
+    }
+}
     clear() {
         this.invadors = [];
     }
 }
-// Стрельбу доделать
+
 class Fire {
     constructor(x, y) {
         this.x = x;
         this.y = y;
         this.vel = {
             x: 0,
-            y: -1
+            y: -5
         }
         this.cube = {
-            x_max: this.x + 60,
-            y_max: this.y + 60,
+            x_max: this.x + 20,
+            y_max: this.y + 20,
             x: this.x,
             y: this.y,
         }
@@ -201,7 +227,7 @@ class Fire {
         this.x += this.vel.x;
         this.y += this.vel.y;
         ctx.fillStyle = "red";
-        ctx.fillRect(this.x, this.y, 60, 60)
+        ctx.fillRect(this.x, this.y, 10, 10)
     }
 }
 
@@ -361,10 +387,11 @@ document.addEventListener("keyup", (event) => {
         case 'KeyD':
             keys.d = false;
             break
-
         case 'Space':
             keys.space = false;
             break
+
+
     }
 })
 const fuelbox = [new FuelKit()]
@@ -381,14 +408,22 @@ function draw() {
 
         for (let i = 0; i < fire.length; i++) {
             fire[i].update();
-
+            if (fire[i].y < 0){
+                fire.splice(i, 1)
+            } 
         }
         for (let i = 0; i < invadors.length; i++) {
-            invadors[i].update()
+            
+            for (let j = 0; j < fire.length; j++){
+                invadors[i].check_position(fire[j].cube)
+                
+            }
             invadors[i].check_position(player.cube);
             hp_val -= invadors[i].damage
-
+            invadors[i].update()
         }
+
+        
         for (let i = 0; i < helpbox.length; i++) {
             helpbox[i].update()
             helpbox[i].check_position(player.cube);
@@ -426,7 +461,7 @@ function draw() {
             player.vel.y = 0;
         }
         if (keys.space) {
-            fire.push(new Fire());
+            fire.push(new Fire(player.fire_pos, player.y));
         }
         if (ticks >= 60 * 8) {
             helpbox.splice(0, 1);
@@ -434,13 +469,14 @@ function draw() {
             fuelbox.splice(0, 1);
             fuelbox.push(new FuelKit());
             ticks = 0;
-            money_val += 1
+           
             invadors.push(new InvadorGroup());
             invadors[invadors.length - 1].create(48);
         }
-
+        
         if (ticks % 60*4 === 0) {
             fuel_val -= 1
+            money_val += 1
         }
         if (hp_val < 0 || fuel_val < 0){
             hp_val = 0
