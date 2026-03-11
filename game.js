@@ -82,15 +82,18 @@ class Invador {
             y: 2
         }
         this.start = false
+        this.fire = true 
         let image = new Image();
         image.src = "invader.png";
+       
         this.cube = {
-            x_max: this.x + 40,
-            y_max: this.y + 40
+            x_max: this.x + 60,
+            y_max: this.y + 60
         }
         image.onload = () => {
             this.width = image.width * 1.5;
             this.height = image.height * 1.5;
+             this.fire_pos = this.x + this.width / 2
             this.image = image;
             this.cube = {
                 x_max: this.x + this.width,
@@ -156,21 +159,20 @@ class InvadorGroup {
 check_position(player_box) {
     let oneDel = false;
     this.damage = 0;
+    this.pos = -1
     for (let i = this.invadors.length - 1; i >= 0; i--) {
         let invador = this.invadors[i];
         if (player_box.x < invador.cube.x_max &&
             player_box.x_max > invador.x &&
             player_box.y < invador.cube.y_max &&
             player_box.y_max > invador.y) {
-            this.invadors.splice(i, 1);
-            oneDel = true;
             this.damage = 1;
+            this.invadors.splice(i, 1);
         }
     }
-
 }
-    clear() {
-        this.invadors = [];
+    clear(id) {
+        this.invadors.splice(id, 1);
     }
 }
 
@@ -186,8 +188,8 @@ class Asteroid{
         let image = new Image();
         image.src = "asteroid.png";
         this.cube = {
-            x_max: this.x + 40,
-            y_max: this.y + 40
+            x_max: this.x + 80,
+            y_max: this.y + 0
         }
         image.onload = () => {
             this.width = image.width * 0.1;
@@ -205,7 +207,7 @@ class Asteroid{
     update() {
         if (this.start){
             this.x += this.vel.x;
-            this.y += this.vel.y;
+                this.y += this.vel.y;
             this.cube.x_max = this.x + this.width;
             this.cube.y_max = this.y + this.height;
 
@@ -264,11 +266,8 @@ class AsteroidGroup {
                 player_box.y < asteroid.cube.y_max &&
                 player_box.y_max > asteroid.y) {
                 this.asteroids.splice(i, 1);
-                oneDel = true;
+                this.damage = 1;
             }
-        }
-        if (oneDel) {
-            this.damage = 1;
         }
     }
     clear() {
@@ -284,6 +283,7 @@ class Fire {
             x: 0,
             y: vel
         }
+        this.damage = 0;
         this.color = color;
         this.cube = {
             x_max: this.x + 20,
@@ -295,11 +295,21 @@ class Fire {
     }
 
     update() {
+        this.damage = 0
         this.x += this.vel.x;
         this.y += this.vel.y;
         ctx.fillStyle =  this.color;
         ctx.fillRect(this.x, this.y, 10, 10)
     }
+    check_position(player_box) {
+    this.damage = 0;
+    if (player_box.x < this.cube.x_max &&
+        player_box.x_max > this.x &&
+        player_box.y < this.cube.y_max &&
+        player_box.y_max > this.y) {
+        this.damage = 1;
+    }
+}
 }
 
 class HelpKit{
@@ -441,12 +451,8 @@ document.addEventListener("keydown", (event) => {
             keys.space = true;
             break
         case 'KeyP':
-            if (keys.p === false){
-                keys.p = true;
-            }
-            else {
-                keys.p = false;
-            }
+            keys.p = !keys.p;
+            
     }
 })
 
@@ -483,13 +489,14 @@ const invadors = [new InvadorGroup()];
 const asteroids = [new AsteroidGroup()];
 
 const fire = [];
+const InvadorFire = []
 
+let oldSpaceKeyValue = false
 asteroids[0].create(5)
 invadors[invadors.length - 1].create(5);
 
 function draw() {
     if (start_game){
-        console.log(keys.p)
         if (keys.p === false){
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             player.update();
@@ -502,16 +509,34 @@ function draw() {
             }
             //Враги
             for (let i = 0; i < invadors.length; i++) {
-
+                invadors[i].invadors.forEach((invador) => {
+                    if (invador.fire & ticks >= 60 * 12 & InvadorFire.length === 0){
+                    InvadorFire.push(new Fire(invador.fire_pos, invador.y, 1, 'blue'))
+                }
+                })
                 for (let j = 0; j < fire.length; j++){
                     invadors[i].check_position(fire[j].cube)
                     if (invadors[i].damage !== 0){
-                        fire.splice(j, 1)
+                        fire.splice(j, 1) 
                     }
                 }
                 invadors[i].check_position(player.cube);
                 hp_val -= invadors[i].damage
+                
                 invadors[i].update()
+                
+            }
+            // Стрельба Врагов
+            for (let i = 0; i < InvadorFire.length; i++) {
+                InvadorFire[i].update();
+                InvadorFire[i].check_position(player.cube)
+                hp_val -= InvadorFire[i].damage
+                if (InvadorFire[i].y > canvas.height || InvadorFire.damage !== 0){
+                    InvadorFire.splice(i, 1)
+                }
+                
+                
+                
             }
             //Астероиды
             for (let i = 0; i < asteroids.length; i++) {
@@ -519,6 +544,7 @@ function draw() {
                     asteroids[i].check_position(fire[j].cube)
                     if (asteroids[i].damage !== 0){
                         fire.splice(j, 1)
+                        asteroids[i].update()
                     }
                 }
                 asteroids[i].check_position(player.cube);
@@ -564,8 +590,12 @@ function draw() {
                 player.vel.x = 0;
                 player.vel.y = 0;
             }
-            if (keys.space) {
+            if (keys.space && !oldSpaceKeyValue) {
+                oldSpaceKeyValue = keys.space
                 fire.push(new Fire(player.fire_pos, player.y, -5));
+            }
+            else if (!keys.space == oldSpaceKeyValue){
+                oldSpaceKeyValue = keys.space
             }
 
             //время
@@ -577,6 +607,7 @@ function draw() {
             if (ticks % 60*4 === 0) {
                 fuel_val -= 1
                 money_val += 1
+                console.log(hp_val)
             }
             if (ticks === 60*8) {
                 helpbox.splice(0, 1);
