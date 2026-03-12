@@ -27,6 +27,7 @@ let keys = {
     'd': false,
     'space': false,
     'p': false,
+    'e': false
 
 };
 let ticks = 0
@@ -82,11 +83,17 @@ class Invador {
             y: 2
         }
         this.start = false
-        this.fire = true 
+        this.fire = false
+        if (Math.floor(Math.random()* 2) >= 1){
+            this.fire = true
+        } 
+        this.fire = true
         let image = new Image();
         image.src = "invader.png";
        
         this.cube = {
+            x: this.x,
+            y: this.y,
             x_max: this.x + 60,
             y_max: this.y + 60
         }
@@ -95,10 +102,10 @@ class Invador {
             this.height = image.height * 1.5;
              this.fire_pos = this.x + this.width / 2
             this.image = image;
-            this.cube = {
-                x_max: this.x + this.width,
-                y_max: this.y + this.height
-            }
+            this.cube.x_max = this.x + this.width;
+            this.cube.y_max = this.y + this.height;
+            this.cube.x = this.x;
+            this.cube.y = this.y;
             this.start = true
         }
 
@@ -282,24 +289,28 @@ class Fire {
         this.vel = {
             x: 0,
             y: vel
-        }
+        };
         this.damage = 0;
         this.color = color;
         this.cube = {
             x_max: this.x + 20,
             y_max: this.y + 20,
             x: this.x,
-            y: this.y,
-        }
-
+            y: this.y
+        };
     }
-
     update() {
-        this.damage = 0
+        this.damage = 0;
         this.x += this.vel.x;
         this.y += this.vel.y;
+        this.cube = {
+            x_max: this.x + 20,
+            y_max: this.y + 20,
+            x: this.x,
+            y: this.y
+        };
         ctx.fillStyle =  this.color;
-        ctx.fillRect(this.x, this.y, 10, 10)
+        ctx.fillRect(this.x, this.y, 10, 10);
     }
     check_position(player_box) {
     this.damage = 0;
@@ -310,6 +321,68 @@ class Fire {
         this.damage = 1;
     }
 }
+}
+
+class Money{
+    constructor() {
+        this.x = Math.floor(Math.random() * 1701);
+        this.y = 100 * Math.random();
+        this.vel = {
+            x: 0,
+            y: 2
+        }
+        this.start = false
+        let image = new Image();
+        image.src = "help.png";
+        this.cube = {
+            x_max: this.x + 40,
+            y_max: this.y + 40
+        }
+        image.onload = () => {
+            this.width = image.width * 0.1;
+            this.height = image.height * 0.1;
+            this.image = image;
+            this.cube = {
+                x_max: this.x + this.width,
+                y_max: this.y + this.height
+            }
+            this.start = true
+        }
+        this.help = 0
+
+    }
+    update() {
+        if (this.start){
+            this.x += this.vel.x;
+            this.y += this.vel.y;
+            this.cube.x_max = this.x + this.width;
+            this.cube.y_max = this.y + this.height;
+
+            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+        }
+        else {
+            this.cube.x_max = this.x + 40;
+            this.cube.y_max = this.y + 40;
+        }
+
+    }
+    check_position(player_box) {
+        this.oneDel = false
+        if ((this.x < player_box.x_max && player_box.x < this.x )|| (this.cube.x_max > player_box.x
+                && this.cube.x_max < player_box.x_max) ||
+            (this.x > player_box.x && this.cube.x_max < player_box.x)) {
+
+            if (this.cube.y_max > player_box.y && this.y < player_box.y) {
+                this.oneDel = true;
+                this.help = 20
+
+
+            }
+        }
+
+
+    }
+
 }
 
 class HelpKit{
@@ -452,7 +525,9 @@ document.addEventListener("keydown", (event) => {
             break
         case 'KeyP':
             keys.p = !keys.p;
-            
+            break
+        case 'KeyE':
+            keys.e = !keys.e;
     }
 })
 
@@ -480,8 +555,8 @@ document.addEventListener("keyup", (event) => {
 })
 
 
-const fuelbox = [new FuelKit()]
-const helpbox = [new HelpKit()]
+const fuelbox = [new FuelKit()];
+const helpbox = [new HelpKit()];
 
 const player = new Player();
 
@@ -489,35 +564,56 @@ const invadors = [new InvadorGroup()];
 const asteroids = [new AsteroidGroup()];
 
 const fire = [];
-const InvadorFire = []
+const InvadorFire = [];
 
 let oldSpaceKeyValue = false
-asteroids[0].create(5)
-invadors[invadors.length - 1].create(5);
+asteroids[0].create(3)
+invadors[invadors.length - 1].create(3);
+
+function check_position(box_1, box_2) {
+    if (box_2.x < box_1.x_max &&
+        box_2.x_max > box_1.x &&
+        box_2.y < box_1.y_max &&
+        box_2.y_max > box_1.y) {
+        return true;
+    };
+    return false;
+}
 
 function draw() {
     if (start_game){
         if (keys.p === false){
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            speed.textContent = `1 ${speed_text}`
             player.update();
             // Стрельба
             for (let i = 0; i < fire.length; i++) {
                 fire[i].update();
                 if (fire[i].y < 0){
-                    fire.splice(i, 1)
+                    fire.splice(i, 1);
                 }
             }
             //Враги
             for (let i = 0; i < invadors.length; i++) {
+                
                 invadors[i].invadors.forEach((invador) => {
-                    if (invador.fire & ticks >= 60 * 12 & InvadorFire.length === 0){
-                    InvadorFire.push(new Fire(invador.fire_pos, invador.y, 1, 'blue'))
+                    if (invador.fire & invadors.length + 1 >= InvadorFire.length){
+                        if (InvadorFire.length === 0){
+                            InvadorFire.push(new Fire(invador.x, invador.y, 5, 'blue'))
+                        }
+                        else{
+                            for(let f = 0;f < InvadorFire.length; f++){
+                                if (!(InvadorFire[f].x === invador.x)){
+                                    InvadorFire.push(new Fire(invador.x, invador.y, 5, 'blue'))
+                                }
+                            }
+                        }
                 }
                 })
                 for (let j = 0; j < fire.length; j++){
                     invadors[i].check_position(fire[j].cube)
                     if (invadors[i].damage !== 0){
-                        fire.splice(j, 1) 
+                        fire.splice(j, 1)
                     }
                 }
                 invadors[i].check_position(player.cube);
@@ -529,13 +625,11 @@ function draw() {
             // Стрельба Врагов
             for (let i = 0; i < InvadorFire.length; i++) {
                 InvadorFire[i].update();
-                InvadorFire[i].check_position(player.cube)
-                hp_val -= InvadorFire[i].damage
-                if (InvadorFire[i].y > canvas.height || InvadorFire.damage !== 0){
+                InvadorFire[i].check_position(player.cube);
+                if (InvadorFire[i].cube.y >= canvas.height || InvadorFire[i].damage !== 0){
+                    hp_val -= InvadorFire[i].damage;
                     InvadorFire.splice(i, 1)
                 }
-                
-                
                 
             }
             //Астероиды
@@ -597,6 +691,19 @@ function draw() {
             else if (!keys.space == oldSpaceKeyValue){
                 oldSpaceKeyValue = keys.space
             }
+            if (keys.e) {
+                if (player.vel.x > 0){
+                    player.vel.x += 1
+                }
+                else if (player.vel.x < 0){
+                    player.vel.x -= 1
+                }else if (player.vel.y > 0){
+                    player.vel.y += 1
+                }else if (player.vel.y < 0){
+                    player.vel.y -= 1
+                }
+                speed.textContent = `2 ${speed_text}`
+            }
 
             //время
             if (ticks >= 60 * 24) {
@@ -624,6 +731,7 @@ function draw() {
             money.textContent = `${money_val} Монет`
             fuel.textContent = `${fuel_val}%`
             hp.textContent = `${hp_val}%`;
+            
             ticks++;
 
         }
