@@ -333,7 +333,7 @@ class Money{
         }
         this.start = false
         let image = new Image();
-        image.src = "help.png";
+        image.src = "money.png";
         this.cube = {
             x_max: this.x + 40,
             y_max: this.y + 40
@@ -557,6 +557,7 @@ document.addEventListener("keyup", (event) => {
 
 const fuelbox = [new FuelKit()];
 const helpbox = [new HelpKit()];
+const moneybox = [new Money()];
 
 const player = new Player();
 
@@ -630,7 +631,7 @@ function draw() {
                     hp_val -= InvadorFire[i].damage;
                     InvadorFire.splice(i, 1)
                 }
-                
+
             }
             //Астероиды
             for (let i = 0; i < asteroids.length; i++) {
@@ -654,6 +655,17 @@ function draw() {
                 }
                 if (helpbox[i].oneDel){
                     helpbox.splice(0, 1);
+                }
+            }
+            //Монетка
+            for (let i = 0; i < moneybox.length; i++) {
+                moneybox[i].update()
+                moneybox[i].check_position(player.cube);
+                if (moneybox[i].help !== 0){
+                    money_val += 10
+                }
+                if (moneybox[i].oneDel){
+                    moneybox.splice(i, 1);
                 }
             }
             //Топливо
@@ -721,6 +733,8 @@ function draw() {
                 helpbox.push(new HelpKit());
                 fuelbox.splice(0, 1);
                 fuelbox.push(new FuelKit());
+                moneybox.splice(0, 1);
+                moneybox.push(new Money());
             }
             //Здоровье и топливо
             if (hp_val < 0 || fuel_val < 0){
