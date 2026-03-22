@@ -1,25 +1,72 @@
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../media/fonts/Montserrat/static/Montserrat-Bold.ttf');
+    font-weight: 600;
+}
+@font-face {
+    font-family: 'Roboto';
+    src: url('../media/fonts/Roboto/static/Roboto-Medium.ttf');
+    font-weight: 300;
+}
 :root{
-    --main-font-color: black;
-
+    --main-font-color: white;
+    --main-fone-color: #1A202C;
+    --title-font: 'Montserrat', sans-serif;
+    --text-font: "Roboto", sans-serif;
+}
+body{
+    background-color: var(--main-fone-color);
 }
 .title{
     font-size: 24px;
     font-weight: 600;
     color: var(--main-font-color);
+    font-family: var(--title-font);
 }
+.text{
+    color: var(--main-font-color);
+    font-family: var(--text-font);
+    font-weight: 600;
+    font-size: 16px;
+}
+.button{
+    color: var(--title-font);
+    font-family: var(--title-font);
+    font-weight: 600;
+    text-decoration: none;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid var(--main-font-color);
+    background-color: var(--main-fone-color);
+    color: var(--main-font-color);
+}
+.container{
+    margin-top: 35px;
+    margin-bottom: 35px;
+}
+main{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 
+}
+main > *{
+    width: 70%;
+}
 header{
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
 }
 .logo{
     width: 60px;
     height: auto;
+    align-self: center;
 
 }
 nav{
-
+    display: flex;
+    justify-content: space-between;
 }
 .nav-element{
     font-size: 24px;
@@ -39,17 +86,17 @@ main{
 
 }
 .slider-image{
-    background-image: url('../media/img/excursions/image.jpeg');
+    background-image: url('../media/foto/foto1.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-    width: 60%;
     height: 300px;
+    width: 100%;
     border: 1px;
     border-radius: 10px;
 }
 .slider-content{
-    width: 60%;
+
     height: auto;
 
 }
@@ -65,5 +112,42 @@ main{
     color: var(--main-font-color);
 }
 .point{
-    font-size: 30px;
+    font-size: 60px;
+    padding: 0;
+    margin: 0;
 }
+.about-us{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.about-us > *{
+    margin: 0.5%;
+}
+.about-us-left{
+    align-self: flex-start;
+    width: 49%;
+
+}
+.about-us-img{
+    height: 300px;
+    background-image: url('../media/foto/foto6.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.about-us-text{
+    width: 49%;
+}
+.hello{
+    display: block;
+}
+.search{
+}
+.input{
+    width: 20%;
+    padding: 2.5px;
+    border: 1px solid var(--main-font-color);
+    border-radius: 10px;
+}
+
