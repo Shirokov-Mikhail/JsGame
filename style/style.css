@@ -19,7 +19,7 @@ body{
     background-color: var(--main-fone-color);
 }
 .title{
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 600;
     color: var(--main-font-color);
     font-family: var(--title-font);
@@ -28,7 +28,7 @@ body{
     color: var(--main-font-color);
     font-family: var(--text-font);
     font-weight: 600;
-    font-size: 16px;
+    font-size: 14px;
 }
 .button{
     color: var(--title-font);
@@ -36,7 +36,7 @@ body{
     font-weight: 600;
     text-decoration: none;
     padding: 10px;
-    font-size: 16px;
+    font-size: 14px;
     border: 1px solid var(--main-font-color);
     background-color: var(--main-fone-color);
     color: var(--main-font-color);
@@ -72,7 +72,7 @@ nav{
     justify-content: space-between;
 }
 .nav-element{
-    font-size: 24px;
+    font-size: 20px;
     color: var(--main-font-color);
     text-decoration: none;
     padding: 10px;
