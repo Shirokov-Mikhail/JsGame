@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Книга-Моя библиотека</title>
+    <link rel="stylesheet" href="font-awesome/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Основной интерфейс после авторизации -->
+    <div class="app-container" id="app-interface">
+        <!-- Шапка -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-book-open"></i>
+                    <h1>Моя библиотека</h1>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li class="active"><a href="books.php"><i class="fas fa-home"></i> Главная</a></li>
+                        <li><a href="add_book.php"><i class="fas fa-plus"></i> Добавить книгу</a></li>
+                        <li><a href="../php/logout.php" id="logout-btn"><i class="fas fa-sign-out-alt"></i>Выход</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Основное содержимое -->
+        <main class="main-content">
+            <div class="container">
+                <div class="modal-content book-view-content">
+                    <div class="modal-header">
+                        <h2>Название книги</h2>
+                    </div>
+                    <div class="modal-body">
+                        <div class="book-view-container">
+                            <div class="book-view-cover">
+                                <img src="img/test.jpg" alt="Обложка книги">
+                            </div>
+                            <div class="book-view-details">
+                                <div class="book-view-meta">
+                                    <p><strong>Автор:</strong> <span id="view-author">Автор книги</span></p>
+                                    <p><strong>Жанр:</strong> <span id="view-genre">Фантастика</span></p>
+                                    <p><strong>Год издания:</strong> <span id="view-year">2020</span></p>
+                                    <p><strong>Добавлено:</strong> <span id="view-date">12.05.2023</span></p>
+                                </div>
+                                <div class="book-view-description">
+                                    <h3>Описание</h3>
+                                    <p >Здесь будет подробное описание книги. Это может быть аннотация, краткое содержание или ваши личные заметки о прочитанном. Максимальная длина описания - 500 символов.</p>
+                                </div>
+                                <div class="book-view-actions">
+                                    <a href="edit_book.html" class="btn btn-primary"><i class="fas fa-edit"></i> Редактировать</a>
+                                    <a href="delete_book.html" class="btn btn-danger"><i class="fas fa-trash"></i> Удалить</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
