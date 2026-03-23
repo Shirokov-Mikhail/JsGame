@@ -5,7 +5,7 @@
 }
 @font-face {
     font-family: 'Roboto';
-    src: url('../media/fonts/Roboto/static/Roboto-Medium.ttf');
+    src: url('../media/fonts/Roboto/static/Roboto-Light.ttf');
     font-weight: 300;
 }
 :root{

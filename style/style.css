@@ -5,7 +5,7 @@
 }
 @font-face {
     font-family: 'Roboto';
-    src: url('../media/fonts/Roboto/static/Roboto-Medium.ttf');
+    src: url('../media/fonts/Roboto/static/Roboto-Light.ttf');
     font-weight: 300;
 }
 :root{
@@ -258,6 +258,17 @@ footer{
     display: flex;
     width: 100%;
     justify-content: space-evenly;
+}
+.head{
+    display: flex;
+}
+.head > *{
+    margin: 0.5%;
+}
+.full{
+    display: flex;
+    flex-wrap: wrap;
+    width: 38% !important;
 }
 @media (min-width: 1200px){
     .subscription{
