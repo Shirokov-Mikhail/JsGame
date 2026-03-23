@@ -321,3 +321,10 @@ footer{
         width: 99%;
     }
 }
+@media print {
+    html, body{
+        height: 297mm;
+        width: 210mm;
+        filter: grayscale(100%);
+    }
+}
