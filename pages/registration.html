@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+     <link rel="stylesheet" href="../style/style.css">
+
+</head>
+<body>
+    <header>
+    <nav>
+        <a href="" class="nav-element title">Регистрация</a>
+        <a href="" class="nav-element title">Авторизация</a>
+        <a href="" class="nav-element title">Личный кабинет</a>
+        <a href="" class="nav-element title">О нас</a>
+        <a href="" class="nav-element title">Конкурсы</a>
+        <a href="" class="nav-element title">Поиск</a>
+        <a href="" class="nav-element title">Контакты</a>
+    </nav>
+</header>
+<main>
+    <form class="subscription container">
+        <label for="email" class="title">Email</label><br>
+        <input type="email" class="input" id="email"><br>
+
+        <label for="name" class="title">Имя</label><br>
+        <input type="text" class="input" id="name"><br>
+
+        <label for="surename" class="title">Фамилия</label><br>
+        <input type="text" class="input" id="surename"><br>
+
+        <label for="year" class="title">Возвраст</label><br>
+        <input type="date" class="input" name="date1" id="year"><br>
+        
+        <label for="year2"  class="title">Возвраст 2 вариант</label>
+        <input type="datetime" class="input" name="date2" id="year2"><br>
+        <h3 class="title">Пол</h3><br>
+        <label for="check" class="title">мужской</label>
+        <input type="checkbox" id="check"  class="input check">
+        <label for="check2" class="title">женский</label>
+        <input type="checkbox" id="check2" class="input check">
+        <label for="password" class="title">Ваш пароль</label><br>
+        <input type="password" class="input" id="password"><br>
+        <label for="password2" class="title">Повтор пароля</label><br>
+        <input type="password" class="input" id="password2">
+        <label for="file" class="title">Фото</label><br>
+        <input type="file" name="file" id="file" accept="image/png, image/jpeg"><br>
+        <label for="checkbox" id="forcheck" class="title">Согласие на обработку персональных данных</label>
+        <input type="checkbox" id="checkbox" class="input check"><br>
+        
+        <button class="button  form" type="button">Добавить участника</button>
+        <button class="button  form" type="submit">Зарегистрироваться</button>
+    </form>
+</main>
+</body>
+</html>

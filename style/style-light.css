@@ -9,11 +9,11 @@
     font-weight: 300;
 }
 :root{
-    --main-font-color: white;
-    --main-fone-color: #1A202C;
+    --main-font-color: #161614;
+    --main-fone-color: #FFFFFF;
     --title-font: 'Montserrat', sans-serif;
     --text-font: "Roboto", sans-serif;
-    --foter-color: #1B365D;
+    --foter-color: #FFFFFF;
 }
 body{
     background-color: var(--main-fone-color);
@@ -221,7 +221,7 @@ main{
 }
 .subscription > *{
     width: 100%;
-    margin: 1.5px;
+    margin: 2.5px;
 }
 .subscription {
     display: flex;
