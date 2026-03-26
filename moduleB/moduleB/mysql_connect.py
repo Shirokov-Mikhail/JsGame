@@ -53,37 +53,38 @@ class Db:
 
     def getFilms(self):
         try:
-            self.cur.execute('SELECT `id`, `name`, `type`, `miniature`, `year`, `genre`, `description` FROM `films`')
+            self.cur.execute('SELECT `id`, `name`, `autor`, `genre`, `year`, `description`, `fone`, `page` FROM `books`')
             result = self.cur.fetchall()
-            self.films = [(i[0], i[1], i[2], i[3], i[4], i[5], i[6]) for i in result]
+            self.films = [(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7]) for i in result]
             return self.films
 
         except Exception:
             self.films = []
             return []
 
-    def addNewFilm(self, name, type, fone, year, genre_id, desck):
+    def addNewFilm(self, name,autor, page, fone, year, genre_id, desck):
         try:
-
             self.getFilms()
             self.cur.execute(
-                f''' INSERT INTO `films`(`id`, `name`, `type`, `miniature`, `year`, `genre`, `description`) 
-                VALUES ({max(self.films, key=lambda x: x[0])[0] + 1},'{name}','{type}','{fone}', {year},{genre_id},'{desck}') ''')
+                f''' INSERT INTO `books`(`id`, `name`,`autor`, `genre`, `year`, `description`, `fone`, `page`) 
+    VALUES ({max(self.films, key=lambda x: x[0])[0] + 1},'{name}','{autor}' , {genre_id}, {year},'{desck}','{fone}', {page})''')
             return True
         except Exception:
             return False
 
-    def editFilms(self, id, name, type_film, miniature, year, genre, description):
+    def editFilms(self, id, name, page, miniature, year, genre, description, autor):
         try:
             genre = self.getGenreId(genre)
             if miniature:
                 self.cur.execute(
-                    f'''UPDATE films SET name="{name}" ,type="{type_film}",miniature="{miniature}", year="{year}",
-                    genre="{genre}", description="{description}" WHERE id={int(id)};''')
+                    f'''UPDATE `books` SET `name`='{name}', `autor`='{autor}'
+                    ,`genre`='{genre}',`year`='{year}',
+                    `description`='{description}',`page`={page} WHERE id={int(id)};''')
             else:
                 self.cur.execute(
-                    f'''UPDATE films SET name="{name}" ,type="{type_film}",miniature="{miniature}", year="{year}",
-                                    genre="{genre}" WHERE id={int(id) + 1};''')
+                    f'''UPDATE `books` SET `name`='{name}',`autor`='{autor}'
+                    ,`genre`='{genre}',`year`='{year}',
+                    `description`='{description}',`page`={page} ,`fone`='{miniature}'  WHERE id={int(id)};''')
             return True
         except Exception as e:
             print(e)
@@ -92,33 +93,9 @@ class Db:
     def delete_film(self, id):
         try:
             self.cur.execute(
-                f'''DELETE FROM `films` WHERE id={id}''')
+                f'''DELETE FROM `books` WHERE id={id}''')
             return True
         except Exception:
             return False
-
-    def add_favorite_film(self, film_id, user_id):
-        try:
-            self.cur.execute(f'''INSERT INTO favorite (user_id, films_id) VALUES ({int(user_id)}, {int(film_id)})''')
-
-            return True
-        except Exception as e:
-            print(e)
-            return False
-
-    def delete_favorite_film(self, film_id, user_id):
-        try:
-            self.cur.execute(f'''DELETE FROM `favorite` WHERE (user_id={user_id}, films_id={film_id})''')
-
-            return True
-        except Exception:
-            return False
-
-    def get_favorit_films(self, user_id):
-        self.cur.execute(f'''SELECT * FROM `favorite` WHERE `user_id`={int(user_id)};''')
-        rows = self.cur.fetchall()  # Получаем список кортежей
-        films = [i[2] for i in rows]
-        return films
-
     def get_user_id(self):
         return self.id

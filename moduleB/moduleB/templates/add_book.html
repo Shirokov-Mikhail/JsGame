@@ -7,7 +7,7 @@
     <title>Моя библиотека</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../static/styles.css">
 </head>
 <body>
     <!-- Основной интерфейс после авторизации -->
@@ -21,9 +21,9 @@
                 </div>
                 <nav class="main-nav">
                     <ul>
-                        <li class="active"><a href="books.php"><i class="fas fa-home"></i> Главная</a></li>
-                        <li><a href="add_book.php"><i class="fas fa-plus"></i> Добавить книгу</a></li>
-                        <li><a href="../php/logout.php" id="logout-btn"><i class="fas fa-sign-out-alt"></i>Выход</a></li>
+                        <li class="active"><a href=/"><i class="fas fa-home"></i> Главная</a></li>
+                        <li><a href="/add_new_film/"><i class="fas fa-plus"></i> Добавить книгу</a></li>
+                        <li><a href="/auth/" id="logout-btn"><i class="fas fa-sign-out-alt"></i>Выход</a></li>
                     </ul>
                 </nav>
             </div>
@@ -37,35 +37,19 @@
                         <h2>Добавить новую книгу</h2>
                     </div>
                     <div class="modal-body">
-                        <form id="book-form" action='add_book.php' method='post' content="multiply">
+                        <form id="book-form" action='/add_new_film/' method='post' content="multiply">
                             <div class="form-row">
                                 <div class="form-group error">
                                     <label for="book-title">Название книги*</label>
-                                    <input type="text" id="book-title" placeholder="Введите название книги" name='name'  <?php if(isset($err_name)){
-                                        echo('style="border: 1px solid red"');
-                                    } 
-                                    else{
-                                        echo('style="border: 1px solid #ddd"');
-                                    }
-                                        ?>>
-                                    <?php if(isset($err_name)){
-                                        echo('<span class="error-message" style="display: block;">Поле обязательно для заполнения (макс. 100 символов)</span>');
-                                    }
-                                    ?>
+                                    <input type="text" id="book-title" placeholder="Введите название книги" name='name' style="border: 1px solid #ddd">
+
+                                   <span class="error-message" style="display: block;">Поле обязательно для заполнения (макс. 100 символов)</span>
                                 </div>
                                 <div class="form-group">
                                     <label for="book-author">Автор*</label>
-                                    <input type="text" id="book-author" placeholder="Введите автора" name='author' <?php if(isset($err_author)){
-                                        echo('style="border: 1px solid red"');
-                                    } 
-                                    else{
-                                        echo('style="border: 1px solid #ddd"');
-                                    }
-                                        ?>>
-                                    <?php if(isset($err_author)){
-                                        echo('<span class="error-message" style="display: block;">Поле обязательно для заполнения (макс. 100 символов)</span>');
-                                    }
-                                    ?>
+                                    <input type="text" id="book-author" placeholder="Введите автора" name='author' style="border: 1px solid #ddd">
+
+                                    <span class="error-message" style="display: block;">Поле обязательно для заполнения (макс. 100 символов)</span>
                                     
                                 </div>
                             </div>
@@ -73,13 +57,7 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="book-genre">Жанр*</label>
-                                    <select id="book-genre" name='genre' <?php if(isset($err_genre)){
-                                        echo('style="border: 1px solid red"');
-                                    } 
-                                    else{
-                                        echo('style="border: 1px solid #ddd"');
-                                    }
-                                        ?>> 
+                                    <select id="book-genre" name='genre' style="border: 1px solid #ddd">
                                         <option value="0">Выберите жанр</option>
                                         <option value="1">Фантастика</option>
                                         <option value="2">Классика</option>
@@ -88,44 +66,22 @@
                                         <option value="5">Научная литература</option>
                                         <option value="6">Биография</option>
                                     </select>
-                                    <?php if(isset($err_genre)){
-                                        echo('<span class="error-message" style="display: block;">Пожалуйста, выберите жанр</span>');
-                                    }
-                                    ?>
                                     
                                 </div>
                                 <div class="form-group">
                                     <label for="book-year">Год издания*</label>
-                                    <input type="number" id="book-year" placeholder="Год издания" name='year_of_publication' <?php if(isset($err_year)){
-                                        echo('style="border: 1px solid red"');
-                                    } 
-                                    else{
-                                        echo('style="border: 1px solid #ddd"');
-                                    }
-                                        ?>>
-
-                                        <?php if(isset($err_year)){
-                                        echo('<span class="error-message" style="display: block;">Введите корректный год (1800-текущий)</span>');
-                                    }
-                                    ?>
-                                    
+                                    <input type="number" id="book-year" placeholder="Год издания" name='year_of_publication' style="border: 1px solid #ddd">
+                                        <span class="error-message" style="display: block;">Введите корректный год (1800-текущий)</span>
                                 </div>
                             </div>
     
                             <div class="form-group">
                                 <label for="book-description">Описание</label>
-                                <textarea id="book-description" rows="4" placeholder="Краткое описание книги (до 500 символов)" name='description' <?php if(isset($err_desc)){
-                                        echo('style="border: 1px solid red"');
-                                    } 
-                                    else{
-                                        echo('style="border: 1px solid #ddd"');
-                                    }
-                                        ?>></textarea>
+                                <textarea id="book-description" rows="4" placeholder="Краткое описание книги (до 500 символов)" name='description' style="border: 1px solid #ddd"></textarea>
                                 
-                                <?php if(isset($err_desc)){
-                                        echo('<span class="error-message" style="display: block;">Максимальная длина описания 500 символов</span>');
-                                    }
-                                    ?>
+
+                                       <span class="error-message" style="display: block;">Максимальная длина описания 500 символов</span>
+
                                 
                             </div>
     
