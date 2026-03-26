@@ -20,6 +20,9 @@ from . import vievs
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', vievs.index)
+    path('', vievs.index),
+    path('add_new_book/', vievs.add_new_film),
+    path('edit_book/<id>', vievs.edit_films),
+    path('edit_old_book/', vievs.edit_old_film),#убрать addfilm он тут для теста
 ]
 

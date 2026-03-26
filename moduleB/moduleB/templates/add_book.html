@@ -21,7 +21,7 @@
                 </div>
                 <nav class="main-nav">
                     <ul>
-                        <li class="active"><a href=/"><i class="fas fa-home"></i> Главная</a></li>
+                        <li class="active"><a href="/"><i class="fas fa-home"></i> Главная</a></li>
                         <li><a href="/add_new_film/"><i class="fas fa-plus"></i> Добавить книгу</a></li>
                         <li><a href="/auth/" id="logout-btn"><i class="fas fa-sign-out-alt"></i>Выход</a></li>
                     </ul>
@@ -58,13 +58,13 @@
                                 <div class="form-group">
                                     <label for="book-genre">Жанр*</label>
                                     <select id="book-genre" name='genre' style="border: 1px solid #ddd">
-                                        <option value="0">Выберите жанр</option>
-                                        <option value="1">Фантастика</option>
-                                        <option value="2">Классика</option>
-                                        <option value="3">Детектив</option>
-                                        <option value="4">Роман</option>
-                                        <option value="5">Научная литература</option>
-                                        <option value="6">Биография</option>
+                                        <option value="-1">Выберите жанр</option>
+                                        <option value="0">Фантастика</option>
+                                        <option value="1">Классика</option>
+                                        <option value="2">Детектив</option>
+                                        <option value="3">Роман</option>
+                                        <option value="4">Научная литература</option>
+                                        <option value="5">Биография</option>
                                     </select>
                                     
                                 </div>
@@ -95,10 +95,8 @@
                                         
                                         <label class="btn btn-secondary error" ><i class="fas fa-upload"></i>
                                             <input type="file" id="cover" name='cover' value='cover'> Загрузить изображение
-                                            <?php if(isset($err_file)){
-                                        echo('<span class="error-message" style="display: block;">Поддерживаются только JPG изображения</span>');
-                                    }
-                                    ?>
+
+                                      <span class="error-message" style="display: block;">Поддерживаются только JPG изображения</span>
                                             
                                         </label>
                                     </div>

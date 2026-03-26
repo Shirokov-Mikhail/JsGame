@@ -19,9 +19,9 @@
                 </div>
                 <nav class="main-nav">
                     <ul>
-                        <li class="active"><a href="books.html"><i class="fas fa-home"></i> Главная</a></li>
-                        <li><a href="add_book.html"><i class="fas fa-plus"></i> Добавить книгу</a></li>
-                        <li><a href="logout.php" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Выход</a></li>
+                        <li class="active"><a href="/"><i class="fas fa-home"></i> Главная</a></li>
+                        <li><a href="/add_new_film/"><i class="fas fa-plus"></i> Добавить книгу</a></li>
+                        <li><a href="/auth/" id="logout-btn"><i class="fas fa-sign-out-alt"></i>Выход</a></li>
                     </ul>
                 </nav>
             </div>
@@ -32,19 +32,19 @@
             <div class="container">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h2>Редактирование книги: Название книги</h2>
+                        <h2>Редактирование книги: {{ name }}</h2>
                     </div>
                     <div class="modal-body">
                         <form>
                             <div class="form-row">
                                 <div class="form-group ">
                                     <label >Название книги*</label>
-                                    <input type="text" value="Название книги" placeholder="Введите название книги">
+                                    <input type="text" value="{{ name }}" placeholder="Введите название книги">
                                     <span class="error-message">Поле обязательно для заполнения (макс. 100 символов)</span>
                                 </div>
                                 <div class="form-group">
                                     <label >Автор*</label>
-                                    <input type="text" value="Автор книги" placeholder="Введите автора">
+                                    <input type="text" value="autor" placeholder="Введите автора">
                                     <span class="error-message">Поле обязательно для заполнения (макс. 100 символов)</span>
                                 </div>
                             </div>
@@ -52,25 +52,22 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label >Жанр*</label>
-                                    <select name="">
-                                        <option value="" selected>Фантастика</option>
-                                        <option value="">Классика</option>
-                                        <option value="">Детектив</option>
-                                        <option value="">Роман</option>
-                                        <option value="">Научная литература</option>
-                                        <option value="">Биография</option>
+                                    <select name="genre">
+                                        {% for i in genres %}
+                                        <option value="i.0" i.2 >i.1</option>
+                                        {% endfor %}
                                     </select>
                                     <span class="error-message">Пожалуйста, выберите жанр</span>
                                 </div>
                                 <div class="form-group">
                                     <label >Год издания*</label>
-                                    <input type="number" value="1996" placeholder="Год издания">
+                                    <input type="number" value="{{ year }}" placeholder="Год издания">
                                     <span class="error-message">Введите корректный год (1800-текущий)</span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="book-description">Описание</label>
-                                <textarea id="book-description" rows="4" placeholder="Краткое описание книги (до 500 символов)">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum, rerum.</textarea>
+                                <textarea id="book-description" rows="4" placeholder="Краткое описание книги (до 500 символов)">{{ desk }}</textarea>
                                 <span class="error-message">Максимальная длина описания 500 символов</span>
                             </div>
     
