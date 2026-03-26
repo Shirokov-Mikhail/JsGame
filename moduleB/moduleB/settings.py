@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'moduleB'
 ]
 
 MIDDLEWARE = [
@@ -79,7 +80,7 @@ WSGI_APPLICATION = 'moduleB.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django',      # Name of the MySQL database
+        'NAME': 'main',      # Name of the MySQL database
         'USER': 'root',      # MySQL username
         'PASSWORD': '',  # MySQL password
         'HOST': 'localhost',
