@@ -20,9 +20,9 @@
                 </div>
                 <nav class="main-nav">
                     <ul>
-                        <li class="active"><a href="books.php"><i class="fas fa-home"></i> Главная</a></li>
-                        <li><a href="add_book.php"><i class="fas fa-plus"></i> Добавить книгу</a></li>
-                        <li><a href="../php/logout.php" id="logout-btn"><i class="fas fa-sign-out-alt"></i>Выход</a></li>
+                        <li class="active"><a href="  "><i class="fas fa-home"></i> Главная</a></li>
+                        <li><a href=" "><i class="fas fa-plus"></i> Добавить книгу</a></li>
+                        <li><a href=" " id="logout-btn"><i class="fas fa-sign-out-alt"></i>Выход</a></li>
                     </ul>
                 </nav>
             </div>
@@ -32,14 +32,14 @@
             <div class="container">
                 <!-- Панель управления -->
                 <div class="control-panel">
-                    <form action="books.php" method="post">
+                    <form action=" " method="post">
                         <div class="search-box">
                             <input type="text" placeholder="Поиск по названию..." name="search">
                             <button type="submit" class="btn btn-search"><i class="fas fa-search"></i>Найти</button>
                         </div>
                     </form>
                     <div class="filters">
-                        <form action="books.php" class="row g-2" method="post">
+                        <form action=" " class="row g-2" method="post">
                             <select class="form-control" name='search_genre'>
                             <option value="0">Выберите жанр</option>
                             <option value="1">Фантастика</option>
@@ -51,7 +51,7 @@
                             </select>
                             <button class="btn btn-primary">Выбрать</button>
                         </form>
-                        <form action="books.php" class="row g-2"  method="post">
+                        <form action=" " class="row g-2"  method="post">
                             <select class="form-control" name="alpha">
                                 <option value="ASC">По названию (А-Я)</option>
                                 <option value="DESC">По названию (Я-А)</option>
@@ -62,44 +62,36 @@
                 </div>
                 <!-- Список книг -->
                 <div class="books-list">
-                    <?php foreach($result as $current): ?>
+
                     <div class="book-card">
                         <div class="book-cover">
                             <img src="img/test.jpg" alt="Обложка книги">
                             <a href="book.html"></a>
                         </div>
                         <div class="book-info">
-                            <h3 class="book-title"><a href="book.html"><?php echo($current['name']); ?></a></h3>
-                            <p class="book-author"><?php echo($authors->get_name($current['author_id']))?></p>
+                            <h3 class="book-title"><a href="book.html"> </a></h3>
+                            <p class="book-author"> </p>
                             <div class="book-meta">
-                                <span class="book-year"><i class="fas fa-calendar-alt"></i> 
-                                <?php echo($current['year_of_publication']); ?>
+                                <span class="book-year"><i class="fas fa-calendar-alt"></i>
+
                             </span>
                                 <span class="book-genre"><i class="fas fa-tag"></i> 
-                                <?php
-                                $sql = 'SELECT name FROM genres WHERE id = :id';
-                                $stmt = $pdo->prepare($sql);
-                                $stmt->execute(['id' => $current['genre_id']]);
-                                $genre = $stmt->fetch(PDO::FETCH_ASSOC)['name'];
-                                echo($genre); ?>
+
                                 </span>
                             </div>
                             <div class="book-actions">
-                                <a <?php echo("href=book.php?id=" . $current['id']) ?> class="btn btn-view"><i class="fas fa-eye"></i></a>
-                                <a <?php echo("href=edit_book.php?id=" . $current['id']) ?> class="btn btn-edit"><i class="fas fa-edit"></i></a>
-                                <a <?php echo("href=delete_book.php?id=" . $current['id']) ?> class="btn btn-delete"><i class="fas fa-trash"></i></a>
+                                <a class="btn btn-view"><i class="fas fa-eye"></i></a>
+                                <a  class="btn btn-edit"><i class="fas fa-edit"></i></a>
+                                <a class="btn btn-delete"><i class="fas fa-trash"></i></a>
                             </div>
                         </div>
                     </div>
-                    <?php endforeach; ?>
+                </div>
                 <!-- Пагинация -->
                 <div class="pagination">
-                    <a class="btn btn-pagination" href="../php/left.php"><i class="fas fa-chevron-left"></i></a>
-                    <?php for($i = 1; $i <= (int)(count($all) / 3) + 1; $i++){
-                        echo('<a class="btn btn-pagination active" href="../php/change.php?n=' . $i . '">' . $i . '</a>');
-                    }
-                    ?>
-                    <a class="btn btn-pagination" href="../php/right.php"><i class="fas fa-chevron-right"></i></a>
+                    <a class="btn btn-pagination" href=" "><i class="fas fa-chevron-left"></i></a>
+                    <a class="btn btn-pagination active" href=" "></a>
+                    <a class="btn btn-pagination" href=" "><i class="fas fa-chevron-right"></i></a>
                 </div>
             </div>
         </main>
