@@ -37,7 +37,7 @@
                         <h2>Добавить новую книгу</h2>
                     </div>
                     <div class="modal-body">
-                        <form id="book-form" action='/add_new_film/' method='post' content="multiply">
+                        <form id="book-form" action='/add_new_book/' method='post' content="multiply">
                             <div class="form-row">
                                 <div class="form-group error">
                                     <label for="book-title">Название книги*</label>
@@ -107,6 +107,7 @@
                                 <button type="button" class="btn btn-secondary" id="cancel-btn">Отмена</button>
                                 <button type="submit" class="btn btn-primary">Сохранить</button>
                             </div>
+                            {% csrf_token %}
                         </form>
                     </div>
                 </div>

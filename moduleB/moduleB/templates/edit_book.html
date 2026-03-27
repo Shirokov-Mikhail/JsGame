@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Моя библиотека</title>
-    <link rel="stylesheet" href="font-awesome/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../static/font-awesome/css/all.min.css">
+     <link rel="stylesheet" href="../static/styles.css">
 </head>
 <body>
     <!-- Основной интерфейс после авторизации -->
@@ -35,16 +35,18 @@
                         <h2>Редактирование книги: {{ name }}</h2>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form method="post" action="">
+                            {% csrf_token %}
+                            <input type="text" value="{{ id }}" name="id" class="hidden" placeholder="Введите название книги">
                             <div class="form-row">
                                 <div class="form-group ">
                                     <label >Название книги*</label>
-                                    <input type="text" value="{{ name }}" placeholder="Введите название книги">
+                                    <input type="text" value="{{ name }}" name="name" placeholder="Введите название книги">
                                     <span class="error-message">Поле обязательно для заполнения (макс. 100 символов)</span>
                                 </div>
                                 <div class="form-group">
                                     <label >Автор*</label>
-                                    <input type="text" value="autor" placeholder="Введите автора">
+                                    <input type="text" value="{{ autor}}" name="autor" placeholder="Введите автора">
                                     <span class="error-message">Поле обязательно для заполнения (макс. 100 символов)</span>
                                 </div>
                             </div>
@@ -54,20 +56,20 @@
                                     <label >Жанр*</label>
                                     <select name="genre">
                                         {% for i in genres %}
-                                        <option value="i.0" i.2 >i.1</option>
+                                        <option value="{{i.0}}" {{ i.2 }} >{{ i.1 }}</option>
                                         {% endfor %}
                                     </select>
                                     <span class="error-message">Пожалуйста, выберите жанр</span>
                                 </div>
                                 <div class="form-group">
                                     <label >Год издания*</label>
-                                    <input type="number" value="{{ year }}" placeholder="Год издания">
+                                    <input type="number" value="{{ year }}" name="year" placeholder="Год издания">
                                     <span class="error-message">Введите корректный год (1800-текущий)</span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="book-description">Описание</label>
-                                <textarea id="book-description" rows="4" placeholder="Краткое описание книги (до 500 символов)">{{ desk }}</textarea>
+                                <textarea id="book-description" rows="4" name="description" placeholder="Краткое описание книги (до 500 символов)">{{ desk }}</textarea>
                                 <span class="error-message">Максимальная длина описания 500 символов</span>
                             </div>
     
@@ -75,12 +77,12 @@
                                 <label >Обложка книги</label>
                                 <div class="cover-upload">
                                     <div class="cover-preview">
-                                        <img id="cover-preview" src="img/test.jpg" alt="Предпросмотр обложки" >
+                                        <img id="cover-preview" src="img/test.jpg"  alt="Предпросмотр обложки" >
                                     </div>
                                     <div class="upload-controls">
                                         
                                         <label class="btn btn-secondary " ><i class="fas fa-upload"></i>
-                                            <input type="file" id="book-cover"> Загрузить изображение
+                                            <input type="file" id="book-cover" name="poster"> Загрузить изображение
                                             
                                             <span class="error-message">Поддерживаются только JPG изображения</span>
                                         </label>

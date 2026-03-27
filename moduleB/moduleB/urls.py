@@ -23,6 +23,10 @@ urlpatterns = [
     path('', vievs.index),
     path('add_new_book/', vievs.add_new_film),
     path('edit_book/<id>', vievs.edit_films),
-    path('edit_old_book/', vievs.edit_old_film),#убрать addfilm он тут для теста
+    path('add_new_film/', vievs.filmRedirect),
+    path('edit_old_book/', vievs.edit_old_book),
+    path('auth/', vievs.auth),
+    path('registration/', vievs.registration)
+
 ]
 

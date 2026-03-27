@@ -46,9 +46,9 @@ class Db:
         return genres_id[genres.index(name)]
 
     def getGenres(self):
-        self.cur.execute('''SELECT genre FROM genre''')
+        self.cur.execute('''SELECT id, genre FROM genre''')
         rows = self.cur.fetchall()  # Получаем список кортежей
-        genres = [row[0] for row in rows]
+        genres = [[row[0], row[1]] for row in rows]
         return genres
 
     def getFilms(self):
@@ -69,7 +69,7 @@ class Db:
                 f''' INSERT INTO `books`(`id`, `name`,`autor`, `genre`, `year`, `description`, `fone`, `page`) 
     VALUES ({max(self.films, key=lambda x: x[0])[0] + 1},'{name}','{autor}' , {genre_id}, {year},'{desck}','{fone}', {page})''')
             return True
-        except Exception:
+        except Exception as e:
             return False
 
     def editFilms(self, id, name, page, miniature, year, genre, description, autor):
