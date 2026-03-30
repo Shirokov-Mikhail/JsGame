@@ -11,8 +11,8 @@ def index(request):
     db = mysql_connect.Db()
     if not bool(request.session['auth']):
         data = {
-            'email_error': ['white', ''],
-            'password_error': ['white', '']}
+            'email_error': ['gray', ''],
+            'password_error': ['gray', '']}
         if request.method == 'POST':
             mail = request.POST.get('email')
             password = request.POST.get('password')
@@ -27,6 +27,7 @@ def index(request):
         data = {
             'data': db.getFilms(),
         }
+        print(data)
         return render(request, 'books.html', context=data)
 
 def add_new_film(request):
@@ -127,3 +128,34 @@ def registration(request):
         return render(request, 'signup.html', context=data)
     else:
         pass
+
+def delete_book(request, id):
+    id = int(id)
+    db = mysql_connect.Db()
+    if db.delete_film(id) and bool(request.session['auth']):
+        return redirect('http://127.0.0.1:5000/')
+    return redirect('/error/403')
+
+def book(request, id):
+    id = int(id)
+    db = mysql_connect.Db()
+    books = db.getFilms()
+    book = []
+    for i in range(len(books)):
+        if books[i][0] == id:
+            book = books[i]
+            break
+    genre = db.getGenreId(id)
+    print(book)
+    data = {
+        'autor': book[2],
+        'genre': genre,
+        'year': book[4],
+        'desk': book[5],
+        'name': book[1],
+        'img': book[6],
+        'id': id
+    }
+    return render(request, 'book.html', context=data)
+
+

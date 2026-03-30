@@ -38,12 +38,12 @@ class Db:
         except Exception:
             return False
 
-    def getGenreId(self, name):
+    def getGenreId(self, id):
         self.cur.execute('''SELECT id, genre FROM genre''')
         rows = self.cur.fetchall()  # Получаем список кортежей
         genres = [row[1] for row in rows]
         genres_id = [int(row[0]) for row in rows]
-        return genres_id[genres.index(name)]
+        return genres[id]
 
     def getGenres(self):
         self.cur.execute('''SELECT id, genre FROM genre''')
@@ -58,7 +58,8 @@ class Db:
             self.films = [(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7]) for i in result]
             return self.films
 
-        except Exception:
+        except Exception as e:
+            print(e)
             self.films = []
             return []
 
@@ -66,7 +67,7 @@ class Db:
         try:
             self.getFilms()
             self.cur.execute(
-                f''' INSERT INTO `books`(`id`, `name`,`autor`, `genre`, `year`, `description`, `fone`, `page`) 
+                f''' INSERT INTO `books` (`id`, `name`,`autor`, `genre`, `year`, `description`, `fone`, `page`) 
     VALUES ({max(self.films, key=lambda x: x[0])[0] + 1},'{name}','{autor}' , {genre_id}, {year},'{desck}','{fone}', {page})''')
             return True
         except Exception as e:
