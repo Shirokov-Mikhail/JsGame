@@ -2,83 +2,73 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-
-    <title>Game</title>
-
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: dimgray;
-        }
-        canvas {
-            display: block;
-            width: 99.5%;
-            height:  80%;
-            background-color: black;
-            border-bottom: 2.5px;
-            border-style: solid;
-            border-color: red;
-        }
-        #gameScreen{
-            display: block;
-        }
-        #startScreen{
-            display: none;
-            background-image: url("startScreenBackground.png");
-            background-repeat: no-repeat;
-            background-position: center;
-            align-items: center;
-            width: 40%;
-            height: 20%;
-            justify-content: center;
-        }
-        .base{
-            display: flex;
-            background-color: dimgray;
-            color: white;
-            justify-content: center;
-
-        }
-        .base-text{
-            padding: 20px;
-            padding-top: 5px;
-            padding-bottom: 5px;
-        }
-        .endScreen{
-            display: none;
-            background-image: url("startScreenBackground.png");
-            background-repeat: no-repeat;
-            background-position: center;
-            height: 60%;
-            padding: 10%;
-            justify-content: center;
-            color: white;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Rocket Game</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<main>
-    <div id="startScreen">
-        <h1 class="text">Супер Летун 1</h1>
-        <label for="inputText">Введи имя</label>
-        <input type="text" id="inputText"><br>
-        <button id="startButton"></button>
-    </div>
-    <div id="gameScreen">
-        <canvas id="canvas" width="1920" height="900"></canvas>
-
-        <div class="base">
-            <h2 class="base-text" id="hp">100%</h2>
-            <h2 class="base-text" id="fuel">100%</h2>
-            <h2 class="base-text" id="speed">1 Cм/Год</h2>
-            <h2 class="base-text" id="money">0 Монет</h2>
+    <!-- Start Screen -->
+    <div id="start-screen">
+        <div class="start-container">
+            <h1>Space Rocket</h1>
+            <input type="text" id="player-name" placeholder="Введите ваше имя">
+            <div class="difficulty">
+                <input type="radio" id="easy" name="difficulty" value="easy">
+                <label for="easy">Легкий</label>
+                <input type="radio" id="medium" name="difficulty" value="medium" checked>
+                <label for="medium">Средний</label>
+                <input type="radio" id="hard" name="difficulty" value="hard">
+                <label for="hard">Сложный</label>
+            </div>
+            <!-- <button class="start-btn" disabled>Start Game</button> -->
+            <button class="start-btn" id="start-btn">Начать игру</button>
         </div>
     </div>
-    <div class="endScreen" id="endScreen">
-        <h1 class="text">Ты наигрался</h1>
+
+    <!-- Game Screen -->
+    <div id="game-screen">
+        <div class="hud">
+            <div class="timer" id="timer">Время: 00:00</div>
+            <div class="coins" id="coins">Монеты: 0</div>
+            <div class="health-bar" id="health-bar">Здоровье: 100%</div>
+            <div class="fuel2" id="fuel2">Топливо: 100%</div>
+        </div>
+        <canvas id="canvas" width="1920" height="1080"></canvas>
+        <!-- Objects will be added dynamically -->
     </div>
-</main>
-<script src="game.js" defer></script>
+
+    <!-- Pause Screen -->
+    <div id="pause-screen">
+        <div class="pause-container">
+            <h2>Пауза</h2>
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="game-over-screen">
+        <div class="game-over-container">
+            <h2>Конец игры</h2>
+            <table class="leaderboard">
+                <thead>
+                    <tr>
+                        <th>Ранг</th>
+                        <th>Никнейм</th>
+                        <th>Время</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Leaderboard entries will be added dynamically -->
+                </tbody>
+            </table>
+            <button class="retry-btn">Начать заново</button>
+            <button class="menu-btn">В меню</button>
+        </div>
+    </div>
+
+    <!-- Countdown -->
+    <div id="countdown"></div>
+
+    <script type="text/javascript" src="game.js">
+        </script>
 </body>
 </html>
