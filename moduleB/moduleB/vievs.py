@@ -106,10 +106,14 @@ def edit_old_book(request):
 def filmRedirect(request):
     return redirect('/add_new_book/')
 
+
+@ensure_csrf_cookie
 def auth(request):
     request.session['auth'] = False
     return redirect('http://127.0.0.1:5000/')
 
+
+@ensure_csrf_cookie
 def registration(request):
     db = mysql_connect.Db()
     if request.method == "GET":
@@ -129,6 +133,8 @@ def registration(request):
     else:
         pass
 
+
+@ensure_csrf_cookie
 def delete_book(request, id):
     id = int(id)
     db = mysql_connect.Db()
@@ -136,6 +142,8 @@ def delete_book(request, id):
         return redirect('http://127.0.0.1:5000/')
     return redirect('/error/403')
 
+
+@ensure_csrf_cookie
 def book(request, id):
     id = int(id)
     db = mysql_connect.Db()
@@ -157,5 +165,6 @@ def book(request, id):
         'id': id
     }
     return render(request, 'book.html', context=data)
+
 
 
