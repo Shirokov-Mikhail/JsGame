@@ -6,7 +6,7 @@ const pauseScreen = document.getElementById("pause-screen");
 
 const name_input  = document.getElementById("player-name");
 const startButton = document.getElementById("start-btn");
-const  retry = document.getElementById("retry-btn");
+const retry = document.getElementById("retry-btn");
 const menu = document.getElementById("menu-btn");
 
 const easy = document.getElementById("easy");
@@ -17,6 +17,7 @@ const money = document.getElementById("coins");
 const timer = document.getElementById("timer");
 const fuel = document.getElementById("fuel2");
 const hp = document.getElementById("health-bar");
+const pause_text = document.getElementById("pause-text");
 
 const rank = document.getElementById("rank-end");
 const end_name = document.getElementById("name-end");
@@ -76,7 +77,7 @@ class Player{
                 x_max: this.x + this.width,
                 y_max: this.y + this.height,
             }
-            this.x += this.vel.x;
+            this.x += 3 * this.vel.x;
             this.y += this.vel.y;
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
             if (this.shield) {// отображение щита
@@ -93,7 +94,7 @@ class Asteroid{
     constructor() {
         this.vel = {
             x:0,
-            y:2 * level
+            y:6 * level
         }
         this.x = Math.floor(Math.random() * canvas.width);
         this.y = 1;
@@ -137,7 +138,7 @@ class Money{
     constructor() {
         this.vel = {
             x:0,
-            y:1
+            y:4
         }
         this.x = Math.floor(Math.random() * canvas.width);
         this.y = 1;
@@ -183,7 +184,7 @@ class HelpKit{
     constructor() {
         this.vel = {
             x:0,
-            y:1
+            y:4
         }
         this.x = Math.floor(Math.random() * canvas.width);
         this.y = 1;
@@ -228,7 +229,7 @@ class FuelKit{
     constructor() {
         this.vel = {
             x:0,
-            y:1
+            y:4
         }
         this.x = Math.floor(Math.random() * canvas.width);;
         this.y = 1;
@@ -274,7 +275,7 @@ class Fire{
     constructor(x, y) {
         this.vel = {
             x: 0,
-            y: -1
+            y: -4
         }
         this.x = x;
         this.y = y;
@@ -336,6 +337,33 @@ document.addEventListener("keyup", (event) => {
 
     }
 })
+async function SendResult(){
+    const date_iso = new Date().toISOString();
+
+    let data = {
+        client: "Misha",
+        name: name,
+        time: sec / 60 + min
+    }
+    console.log(data)
+    try{
+        let response = await fetch("http://localhost:8082/api/score", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+        })
+        console.log(response);
+        if (response.ok){
+            alert('Результат сохранен')
+        }else{
+            console.log('не удалось отправить')
+        }
+    }catch(error){
+        alert(error)
+    }
+}
 // проверка позиции игрока
 function check_pos(cube_1, cube_2)
 {
@@ -363,10 +391,12 @@ let min = 0
 let sec = 0
 let shild_time = 0
 let oldSpaceKeyValue = false
+let start_time = 60 * 5
+let restart = false;
 
 function draw(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (star_game && !end_game) {
+    if (star_game && !end_game && start_time === 0) {
         startScreen.style.display = "none";
         gameScreen.style.display = "block";
         if (!keys.p){
@@ -467,7 +497,10 @@ function draw(){
             if (ticks === 60 * 2){
                 ticks = 0
                 asteroids.push(new Asteroid());
-                moneybox.push(new Money());
+
+                if (ticks2 <= 51 * 6){
+                    moneybox.push(new Money());
+                }
                 sec++
             }
             // появление аптечек и топлива
@@ -476,6 +509,10 @@ function draw(){
                 ticks2 = 0
                 helpbox.push(new HelpKit());
                 fuelbox.push(new FuelKit());
+                while ((helpbox.x - fuelbox.x < 108 && helpbox.x - fuelbox.x > 0) || (-1 * (helpbox.x - fuelbox.x) < 108 && -1 * (helpbox.x - fuelbox.x) > 0)){
+                    fuelbox.splice(fuelbox.length - 1, 1)
+                    fuelbox.push(new FuelKit());
+                }
             }
             // секунды
             if (ticks === 60){
@@ -508,6 +545,7 @@ function draw(){
 
         }else {
             // пауза
+            pause_text.textContent = 'Пауза'
             pauseScreen.style.display = "flex";
         }
 
@@ -519,16 +557,81 @@ function draw(){
         time_end.innerText = timer.innerText;
     }else if(!star_game){
         // начало игры
+
+
         console.log('start')
+    }else {
+        startScreen.style.display = "none";
+        gameScreen.style.display = "block";
+        pauseScreen.style.display = "flex";
+        if (start_time === 60 * 5){
+            pause_text.textContent = '3'
+        }else if (start_time === 60 * 4){
+            pause_text.textContent = '2'
+        }else if (start_time === 60 * 3){
+            pause_text.textContent = '1'
+        }else if (start_time === 60 * 2){
+            pause_text.textContent = '1'
+        }else if (start_time === 60){
+            pause_text.textContent = 'Поехали'
+        }
+        start_time--
+        console.log(start_time)
     }
+
     window.requestAnimationFrame(draw)
 }
+menu.addEventListener('click', ()=>{
+    asteroids = [new Asteroid()]
+    moneybox = [new Money()];
+    helpbox = [new HelpKit()];
+    fuelbox = [new FuelKit()];
+    fire = [];
+    player = new Player();
+    restart = true;
+    star_game = false;
+    end_game = false;
+    hp_val = 100;
+    power = 100;
+    money_val = 0;
+    start_time = 60 * 5;
+    sec = 0;
+    min = 0;
+    startScreen.style.display = "flex";
+    endScreen.style.display = "none";
+    gameScreen.style.display = "none";
+    money.textContent = `Монеты: ${money_val}`
+
+})
+retry.addEventListener('click', () => {
+    asteroids = [new Asteroid()]
+    moneybox = [new Money()];
+    helpbox = [new HelpKit()];
+    fuelbox = [new FuelKit()];
+    fire = [];
+    player = new Player();
+    restart = true;
+    star_game = true;
+    end_game = false;
+    hp_val = 100;
+    power = 100;
+    money_val = 0;
+    level = 1.5;
+    sec = 0;
+    min = 0;
+    start_time = 60 * 5
+    endScreen.style.display = "none";
+    gameScreen.style.display = "block";
+    money.textContent = `Монеты: ${money_val}`
+})
 
 startButton.addEventListener('click', () => {
     if (name_input.value.length > 0){
         star_game = true;
         name = name_input.value;
-        window.requestAnimationFrame(draw)
+        if (!restart){
+            window.requestAnimationFrame(draw)
+        }
         if (easy.checked){
             level = 1;
         }
