@@ -31,6 +31,7 @@ body{
     font-size: 14px;
 }
 .button{
+    display: inline-block;
     color: var(--title-font);
     font-family: var(--title-font);
     font-weight: 600;
@@ -42,6 +43,15 @@ body{
     color: var(--main-font-color);
     cursor: pointer;
 }
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+.button:hover{
+    animation: pulse 1s infinite ease-in-out;
+}
+
 .container{
     margin-top: 35px;
     margin-bottom: 35px;
@@ -162,10 +172,12 @@ main{
     width: 30px;
     height: 30px;
 }
+
 .search-but{
     border: none;
     cursor: pointer;
 }
+
 .competitions{
     display: flex;
     flex-wrap: wrap;
@@ -176,7 +188,8 @@ main{
     margin: 0.5%;
 
 }
-.competition > *{
+
+.competition > .all{
     width: 100%;
 }
 .comp-img{
@@ -228,14 +241,17 @@ main{
     justify-content: start;
     flex-wrap: wrap;
     align-items: center;
-    width: 49%;
+    width: 50%;
     margin: 1%;
 
 }
 /* тут поправить надо */
 .subscriptions{
     display: flex;
-    justify-content: space-evenly;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 70%;
+    justify-content: center;
 
 }
 .form{
@@ -270,11 +286,7 @@ footer{
     flex-wrap: wrap;
     width: 38% !important;
 }
-@media (min-width: 1200px){
-    .subscription{
-        width: 29%;
-    }
-}
+
 @media (max-width: 1200px){
     .subscriptions{
         display: flex;
