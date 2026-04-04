@@ -156,3 +156,69 @@ def addNewBook(request):
     if not error and db.addBook(name, author, year, genre, description, poster.name, 0):
         return redirect('/')
     return render(request, 'add_book.html', context=data)
+
+def edit_book(request, id):
+    db = mysql_connect.Db()
+    all_books = db.getBooks()
+    id = [i[0] for i in all_books].index(id)
+    curent_book = all_books[id]
+    data = {
+        'error_name': ['gray', 'none'],
+        'error_author': ['gray', 'none'],
+        'error_year': ['gray', 'none'],
+        'description_error': ['gray', 'none'],
+        'error_load': 'none',
+        'name': curent_book[1],
+        'author': curent_book[2],
+        'year': curent_book[3],
+        'desk': curent_book[5]
+    }
+    print(request.method)
+    if request.method == 'GET':
+        return render(request, 'edit_book.html' ,context=data)
+
+    name = request.POST.get('name')
+    author = request.POST.get('author')
+    genre = request.POST.get('genre')
+    year = request.POST.get('year_of_publication')
+    description = request.POST.get('description')
+    poster = request.FILES.get('cover')
+    error = False
+    print(request.FILES)
+    if poster:
+        # 1. Формируем путь (лучше использовать абсолютный через BASE_DIR)
+        upload_path = os.path.join(settings.BASE_DIR, 'module/static/uploads/', poster.name)
+
+        # 2. Создаем директорию, если её нет
+        os.makedirs(os.path.dirname(upload_path), exist_ok=True)
+
+        # 3. ПРАВИЛЬНО записываем файл
+        with open(upload_path, 'wb+') as destination:
+            for chunk in poster.chunks():
+                destination.write(chunk)
+
+        # 4. В базу обычно сохраняют ПУТЬ к файлу или только имя
+        file_url = f'uploads/{poster.name}'
+    else:
+        poster = ''
+    if len(description) > 500:
+        error = True
+        data['description_error'] = ['red', 'block']
+    if len(name) > 100:
+        error = True
+        data['error_name'] = ['red', 'block']
+    if len(author) > 100:
+        error = True
+        data['error_author'] = ['red', 'block']
+    if int(year) < 1800 or int(year) > 2026:
+        error = True
+        data['error_year'] = ['red', 'block']
+    if not error and poster != '' and db.editBook(id, name, author, year, genre, description, poster.name, 0):
+        print('DA')
+    elif not error and db.editBook(id, name, author, year, genre, description, '', 0):
+        print('NET')
+
+    return render(request, 'edit_book.html', context=data)
+
+def book(request, id):
+    pass

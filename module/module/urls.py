@@ -24,5 +24,7 @@ urlpatterns = [
     path('books/<int:page>', views.books),
     path('registration/', views.registarion),
     path('add_new_film/', views.addNewBook),
-    path('auth/', views.auth)
+    path('auth/', views.auth),
+    path('edit_book/<int:id>', views.edit_book),
+
 ]

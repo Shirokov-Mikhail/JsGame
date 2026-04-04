@@ -35,65 +35,75 @@
                         <h2>Редактирование книги: {{ name }}</h2>
                     </div>
                     <div class="modal-body">
-                        <form method="post" action="">
-                            {% csrf_token %}
-                            <input type="text" value="{{ id }}" name="id" class="hidden" placeholder="Введите название книги">
+                        <form id="book-form" action='' method='post' content="multiply" enctype="multipart/form-data">
                             <div class="form-row">
-                                <div class="form-group ">
-                                    <label >Название книги*</label>
-                                    <input type="text" value="{{ name }}" name="name" placeholder="Введите название книги">
-                                    <span class="error-message">Поле обязательно для заполнения (макс. 100 символов)</span>
+                                <div class="form-group error">
+                                    <label for="book-title">Название книги*</label>
+                                    <input type="text" id="book-title" placeholder="Введите название книги" name='name' value="{{name}}" style="border: 1px solid {{error_name.0}}" required>
+
+                                    <span class="error-message" style="display: {{error_name.1}};">Поле обязательно для заполнения (макс. 100 символов)</span>
                                 </div>
                                 <div class="form-group">
-                                    <label >Автор*</label>
-                                    <input type="text" value="{{ autor}}" name="autor" placeholder="Введите автора">
-                                    <span class="error-message">Поле обязательно для заполнения (макс. 100 символов)</span>
+                                    <label for="book-author">Автор*</label>
+                                    <input type="text" id="book-author" placeholder="Введите автора" value="{{author}}" name='author' style="border: 1px solid {{error_author.0}}" required>
+
+                                    <span class="error-message" style="display: {{error_author.1}};">Поле обязательно для заполнения (макс. 100 символов)</span>
+
                                 </div>
                             </div>
-    
+
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label >Жанр*</label>
-                                    <select name="genre">
-                                        {% for i in genres %}
-                                        <option value="{{i.0}}" {{ i.2 }} >{{ i.1 }}</option>
-                                        {% endfor %}
+                                    <label for="book-genre">Жанр*</label>
+                                    <select id="book-genre" name='genre' style="border: 1px solid #ddd" required>
+                                        <option value="0">Фантастика</option>
+                                        <option value="1">Классика</option>
+                                        <option value="2">Детектив</option>
+                                        <option value="3">Роман</option>
+                                        <option value="4">Научная литература</option>
+                                        <option value="5">Биография</option>
                                     </select>
-                                    <span class="error-message">Пожалуйста, выберите жанр</span>
+
                                 </div>
                                 <div class="form-group">
-                                    <label >Год издания*</label>
-                                    <input type="number" value="{{ year }}" name="year" placeholder="Год издания">
-                                    <span class="error-message">Введите корректный год (1800-текущий)</span>
+                                    <label for="book-year">Год издания*</label>
+                                    <input type="number" id="book-year" placeholder="Год издания" name='year_of_publication' value="{{ year }}" style="border: 1px solid {{error_year.0}}" required>
+                                    <span class="error-message" style="display: {{error_year.1}};">Введите корректный год (1800-текущий)</span>
                                 </div>
                             </div>
+
                             <div class="form-group">
                                 <label for="book-description">Описание</label>
-                                <textarea id="book-description" rows="4" name="description" placeholder="Краткое описание книги (до 500 символов)">{{ desk }}</textarea>
-                                <span class="error-message">Максимальная длина описания 500 символов</span>
+                                <textarea id="book-description" rows="4" placeholder="Краткое описание книги (до 500 символов)" name='description'  style="border: 1px solid {{ description_error.0 }}">{{ desk }}</textarea>
+
+
+                                <span class="error-message" style="display: {{ description_error.1 }};">Максимальная длина описания 500 символов</span>
+
+
                             </div>
-    
+
                             <div class="form-group">
                                 <label >Обложка книги</label>
                                 <div class="cover-upload">
                                     <div class="cover-preview">
-                                        <img id="cover-preview" src="img/test.jpg"  alt="Предпросмотр обложки" >
+                                        <img id="cover-preview" src="img/test.jpg" alt="Предпросмотр обложки" >
                                     </div>
                                     <div class="upload-controls">
-                                        
-                                        <label class="btn btn-secondary " ><i class="fas fa-upload"></i>
-                                            <input type="file" id="book-cover" name="poster"> Загрузить изображение
-                                            
-                                            <span class="error-message">Поддерживаются только JPG изображения</span>
+
+                                        <label class="btn btn-secondary error" ><i class="fas fa-upload"></i>
+                                            <input type="file" id="cover" name='cover' value='cover'> Загрузить изображение
+                                            <span class="error-message" style="display: {{error_load}};">Поддерживаются только JPG изображения</span>
+
                                         </label>
                                     </div>
                                 </div>
                             </div>
-    
+
                             <div class="form-actions">
-                                <a href="book.html" class="btn btn-secondary">Отмена</a>
+                                <button type="button" class="btn btn-secondary" id="cancel-btn">Отмена</button>
                                 <button type="submit" class="btn btn-primary">Сохранить</button>
                             </div>
+                            {% csrf_token %}
                         </form>
                     </div>
                 </div>
