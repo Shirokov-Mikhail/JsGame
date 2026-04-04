@@ -65,16 +65,16 @@
                    {%  for i in data %}
                      <div class="book-card">
                         <div class="book-cover">
-                            <img src="{{i.6}}" alt="Обложка книги">
+                            <img src="../static/uploads/{{i.6}}" alt="Обложка книги">
                             <a href="book.html">{{ i.1 }}</a>
                         </div>
                         <div class="book-info">
                             <h3 class="book-title"><a href="book.html"> </a></h3>
                             <p class="book-author">{{ i.2 }}</p>
                             <div class="book-meta">
-                                <span class="book-year"><i class="fas fa-calendar-alt">{{ i.4 }}</i>
+                                <span class="book-year"><i class="fas fa-calendar-alt">{{ i.3 }}</i>
                             </span>
-                                <span class="book-genre"><i class="fas fa-tag">{{i.3}}</i>
+                                <span class="book-genre"><i class="fas fa-tag">{{i.4}}</i>
                                 </span>
                             </div>
                             <div class="book-actions">
@@ -88,9 +88,9 @@
                 </div>
                 <!-- Пагинация -->
                 <div class="pagination">
-                    <a class="btn btn-pagination" href=" "><i class="fas fa-chevron-left"></i></a>
-                    <a class="btn btn-pagination active" href=" "></a>
-                    <a class="btn btn-pagination" href=" "><i class="fas fa-chevron-right"></i> </a>
+                    <a class="btn btn-pagination" href="/books/{{undo_page}}"><i class="fas fa-chevron-left"></i>{{undo_page}}</a>
+                    <a class="btn btn-pagination active" href="/books/{{page}}">{{page}}</a>
+                    <a class="btn btn-pagination" href="/books/{{next_page}}"><i class="fas fa-chevron-right"></i>{{next_page}}</a>
                 </div>
             </div>
         </main>

@@ -48,35 +48,36 @@ class Db:
 
     def getBooks(self):
         try:
-            self.cur.execute('''SELECT `id`, `name`, `author`, `genre`, `description`, `poster`, `page` FROM `books`''')
+            self.cur.execute('''SELECT `id`, `name`, `author`,`year`, `genre`, `description`, `poster`, `page` FROM `books`''')
             content = self.cur.fetchall()
-            self.books = [(int(i[0]), i[1], i[2], i[3], i[4], i[5], int(i[6])) for i in content]
+            self.books = [(int(i[0]), i[1], i[2], i[3], self.genreForId(int(i[4])), i[5], i[6], int(i[7])) for i in content]
             return self.books
         except Exception as e:
             print('get books', e)
             return []
 
-    def addBook(self, name, author, genre_id: int, description, poster_name, page: int):
+    def addBook(self, name, author,year, genre_id: int, description, poster_name, page: int):
         try:
+            print(name, author, year, genre_id, description, poster_name, page)
             self.getBooks()
             books = max(self.books, key=lambda x: x[0])
             print(books)
-            self.cur(
-                f'''INSERT INTO `books`(`id`, `name`, `author`, `genre`, `description`, `poster`, `page`)
-                 VALUES ('{books[0] + 1}','{name}','{author}','{genre_id}','{description}','{poster_name}','{page}')''')
+            self.cur.execute(
+                f'''INSERT INTO `books`(`id`, `name`, `author`,`year`, `genre`, `description`, `poster`, `page`)
+                 VALUES ('{books[0] + 1}','{name}','{author}', '{year}','{genre_id}','{description}','{poster_name}','{page}')''')
             return True
         except Exception as e:
             print('addbook', e)
             return False
 
-    def editBook(self, id: int, name, author, genre_id: int, description, poster_name, page: int):
+    def editBook(self, id: int, name, author, year, genre_id: int, description, poster_name, page: int):
             try:
                 if poster_name != '':
                     self.cur.execute(f'''UPDATE `books` SET `name`='{name}',`author`='{author}',`genre`='{genre_id}',
-                `description`='{description}',`poster`='{poster_name}',`page`='{page}' WHERE id='{id}' ''')
+                `description`='{description}',`poster`='{poster_name}',`page`='{page}', `year`='{year}' WHERE id='{id}' ''')
                 else:
                     self.cur.execute(f'''UPDATE `books` SET `name`='{name}',`author`='{author}',`genre`='{genre_id}',
-                `description`='{description}',`page`='{page}' WHERE id='{id}' ''')
+                `description`='{description}',`page`='{page}',`year`='{year}' WHERE id='{id}' ''')
                 return True
             except Exception as e:
                 print('editbook', e)
@@ -89,6 +90,16 @@ class Db:
         except Exception as e:
             print('delete', e)
             return False
+
+    def genreForId(self, id):
+        try:
+            self.cur.execute('''SELECT `id`, `name` FROM `genre`''')
+            result = self.cur.fetchall()
+            name = [i[1] for i in result][id]
+            return name
+        except Exception as e:
+            print('genres', e)
+            return 'NONE'
 
 if __name__ == '__main__':
     db = Db()

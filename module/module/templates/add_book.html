@@ -37,19 +37,19 @@
                         <h2>Добавить новую книгу</h2>
                     </div>
                     <div class="modal-body">
-                        <form id="book-form" action='/add_new_book/' method='post' content="multiply">
+                        <form id="book-form" action='' method='post' content="multiply" enctype="multipart/form-data">
                             <div class="form-row">
                                 <div class="form-group error">
                                     <label for="book-title">Название книги*</label>
-                                    <input type="text" id="book-title" placeholder="Введите название книги" name='name' style="border: 1px solid #ddd">
+                                    <input type="text" id="book-title" placeholder="Введите название книги" name='name' style="border: 1px solid {{error_name.0}}" required>
 
-                                   <span class="error-message" style="display: block;">Поле обязательно для заполнения (макс. 100 символов)</span>
+                                   <span class="error-message" style="display: {{error_name.1}};">Поле обязательно для заполнения (макс. 100 символов)</span>
                                 </div>
                                 <div class="form-group">
                                     <label for="book-author">Автор*</label>
-                                    <input type="text" id="book-author" placeholder="Введите автора" name='author' style="border: 1px solid #ddd">
+                                    <input type="text" id="book-author" placeholder="Введите автора" name='author' style="border: 1px solid {{error_author.0}}" required>
 
-                                    <span class="error-message" style="display: block;">Поле обязательно для заполнения (макс. 100 символов)</span>
+                                    <span class="error-message" style="display: {{error_author.1}};">Поле обязательно для заполнения (макс. 100 символов)</span>
                                     
                                 </div>
                             </div>
@@ -57,7 +57,7 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="book-genre">Жанр*</label>
-                                    <select id="book-genre" name='genre' style="border: 1px solid #ddd">
+                                    <select id="book-genre" name='genre' style="border: 1px solid #ddd" required>
                                         <option value="-1">Выберите жанр</option>
                                         <option value="0">Фантастика</option>
                                         <option value="1">Классика</option>
@@ -70,17 +70,17 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="book-year">Год издания*</label>
-                                    <input type="number" id="book-year" placeholder="Год издания" name='year_of_publication' style="border: 1px solid #ddd">
-                                        <span class="error-message" style="display: block;">Введите корректный год (1800-текущий)</span>
+                                    <input type="number" id="book-year" placeholder="Год издания" name='year_of_publication' style="border: 1px solid {{error_year.0}}" required>
+                                        <span class="error-message" style="display: {{error_year.1}};">Введите корректный год (1800-текущий)</span>
                                 </div>
                             </div>
     
                             <div class="form-group">
                                 <label for="book-description">Описание</label>
-                                <textarea id="book-description" rows="4" placeholder="Краткое описание книги (до 500 символов)" name='description' style="border: 1px solid #ddd"></textarea>
+                                <textarea id="book-description" rows="4" placeholder="Краткое описание книги (до 500 символов)" name='description' style="border: 1px solid {{ description_error.0 }}"></textarea>
                                 
 
-                                       <span class="error-message" style="display: block;">Максимальная длина описания 500 символов</span>
+                                       <span class="error-message" style="display: {{ description_error.1 }};">Максимальная длина описания 500 символов</span>
 
                                 
                             </div>
@@ -94,9 +94,8 @@
                                     <div class="upload-controls">
                                         
                                         <label class="btn btn-secondary error" ><i class="fas fa-upload"></i>
-                                            <input type="file" id="cover" name='cover' value='cover'> Загрузить изображение
-
-                                      <span class="error-message" style="display: block;">Поддерживаются только JPG изображения</span>
+                                            <input type="file" id="cover" name='cover' value='cover' required> Загрузить изображение
+                                      <span class="error-message" style="display: {{error_load}};">Поддерживаются только JPG изображения</span>
                                             
                                         </label>
                                     </div>
