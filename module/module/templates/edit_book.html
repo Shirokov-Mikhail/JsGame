@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Моя библиотека</title>
+    <link rel="stylesheet" href="../static/font-awesome/css/all.min.css">
+     <link rel="stylesheet" href="../static/styles.css">
+</head>
+<body>
+    <!-- Основной интерфейс после авторизации -->
+    <div class="app-container" id="app-interface">
+        <!-- Шапка -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-book-open"></i>
+                    <h1>Моя библиотека</h1>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li class="active"><a href="/"><i class="fas fa-home"></i> Главная</a></li>
+                        <li><a href="/add_new_film/"><i class="fas fa-plus"></i> Добавить книгу</a></li>
+                        <li><a href="/auth/" id="logout-btn"><i class="fas fa-sign-out-alt"></i>Выход</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Основное содержимое -->
+        <main class="main-content">
+            <div class="container">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Редактирование книги: {{ name }}</h2>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="">
+                            {% csrf_token %}
+                            <input type="text" value="{{ id }}" name="id" class="hidden" placeholder="Введите название книги">
+                            <div class="form-row">
+                                <div class="form-group ">
+                                    <label >Название книги*</label>
+                                    <input type="text" value="{{ name }}" name="name" placeholder="Введите название книги">
+                                    <span class="error-message">Поле обязательно для заполнения (макс. 100 символов)</span>
+                                </div>
+                                <div class="form-group">
+                                    <label >Автор*</label>
+                                    <input type="text" value="{{ autor}}" name="autor" placeholder="Введите автора">
+                                    <span class="error-message">Поле обязательно для заполнения (макс. 100 символов)</span>
+                                </div>
+                            </div>
+    
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label >Жанр*</label>
+                                    <select name="genre">
+                                        {% for i in genres %}
+                                        <option value="{{i.0}}" {{ i.2 }} >{{ i.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <span class="error-message">Пожалуйста, выберите жанр</span>
+                                </div>
+                                <div class="form-group">
+                                    <label >Год издания*</label>
+                                    <input type="number" value="{{ year }}" name="year" placeholder="Год издания">
+                                    <span class="error-message">Введите корректный год (1800-текущий)</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="book-description">Описание</label>
+                                <textarea id="book-description" rows="4" name="description" placeholder="Краткое описание книги (до 500 символов)">{{ desk }}</textarea>
+                                <span class="error-message">Максимальная длина описания 500 символов</span>
+                            </div>
+    
+                            <div class="form-group">
+                                <label >Обложка книги</label>
+                                <div class="cover-upload">
+                                    <div class="cover-preview">
+                                        <img id="cover-preview" src="img/test.jpg"  alt="Предпросмотр обложки" >
+                                    </div>
+                                    <div class="upload-controls">
+                                        
+                                        <label class="btn btn-secondary " ><i class="fas fa-upload"></i>
+                                            <input type="file" id="book-cover" name="poster"> Загрузить изображение
+                                            
+                                            <span class="error-message">Поддерживаются только JPG изображения</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="form-actions">
+                                <a href="book.html" class="btn btn-secondary">Отмена</a>
+                                <button type="submit" class="btn btn-primary">Сохранить</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+</body>
+</html>

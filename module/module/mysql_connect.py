@@ -22,13 +22,13 @@ class Db:
         try:
             self.get_users()
             if mail in self.mails:
-                id = self.mails.index(mail)
-                if check_password(password, self.passwords[id]):
+                self.id = self.mails.index(mail)
+                if check_password(password, self.passwords[self.id]):
                     return True
                 return ValueError('Password error')
             return ValueError('Email error')
         except Exception as e:
-            print(e)
+            print('auth', e)
             return False
 
     def registarion(self, mail, password):
@@ -37,22 +37,23 @@ class Db:
             if mail not in self.mails and len(password) >= 3:
                 self.cur.execute(
                     f'''INSERT INTO `users`(`id`, `login`, `password`) VALUES ('{max(self.all_id) + 1}','{mail}','{make_password(password)}')''')
+                self.id = int(max(self.all_id) + 1)
                 return True
             elif mail not in self.mails:
                 return ValueError('Password error')
             return ValueError('Email error')
         except Exception as e:
-            print(e)
+            print('registarion', e)
             return False
 
     def getBooks(self):
         try:
             self.cur.execute('''SELECT `id`, `name`, `author`, `genre`, `description`, `poster`, `page` FROM `books`''')
             content = self.cur.fetchall()
-            self.books = [(int(i[0]), i[1], i[2], i[3](), i[4], i[5], int(i[6])) for i in content]
+            self.books = [(int(i[0]), i[1], i[2], i[3], i[4], i[5], int(i[6])) for i in content]
             return self.books
         except Exception as e:
-            print(e)
+            print('get books', e)
             return []
 
     def addBook(self, name, author, genre_id: int, description, poster_name, page: int):
@@ -65,7 +66,7 @@ class Db:
                  VALUES ('{books[0] + 1}','{name}','{author}','{genre_id}','{description}','{poster_name}','{page}')''')
             return True
         except Exception as e:
-            print(e)
+            print('addbook', e)
             return False
 
     def editBook(self, id: int, name, author, genre_id: int, description, poster_name, page: int):
@@ -78,7 +79,7 @@ class Db:
                 `description`='{description}',`page`='{page}' WHERE id='{id}' ''')
                 return True
             except Exception as e:
-                print(e)
+                print('editbook', e)
                 return False
 
     def deleteBook(self, id: int):
@@ -86,7 +87,7 @@ class Db:
             self.cur.execute(f'''DELETE FROM `books` WHERE id='{id}' ''')
             return True
         except Exception as e:
-            print(e)
+            print('delete', e)
             return False
 
 if __name__ == '__main__':
