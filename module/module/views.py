@@ -11,8 +11,8 @@ def index(request):
     if not request.session['auth']:
         if request.method == 'GET':
             data = {
-                'email_error': ['gray', ''],
-                'password_error': ['gray', '']
+                'email_error': ['#ddd', ''],
+                'password_error': ['#ddd', '']
 
             }
             return render(request, 'index.html', context=data)
@@ -34,11 +34,11 @@ def index(request):
                 if text == 'Email error':
                     data = {
                         'email_error': ['red', text],
-                        'password_error': ['gray', '']
+                        'password_error': ['#ddd', '']
                     }
                 else:
                     data = {
-                        'email_error': ['gray', ''],
+                        'email_error': ['#ddd', ''],
                         'password_error': ['red', text]
                     }
                 return render(request, 'index.html', context=data)
@@ -50,18 +50,39 @@ def books(request, page):
     page = int(page)
     db = mysql_connect.Db()
     books = db.getBooks()
+    filterid = False
     data = {'data': books[page * 6: page * 6 + 6],
             'undo_page': page - 1,
             'page': page,
             'next_page': page + 1
             }
-    if len(books) < 6:
+    if request.method == 'POST':
+        data['data'] = books
+        filterid = True
+        if 'search_genre' in request.POST:
+            data['data'] = list(filter(lambda x: x[4] == request.POST.get('search_genre'), data['data']))
+
+        if 'alpha' in request.POST:
+            data['data'] = list(sorted(data['data']))
+            if request.POST.get('alpha'):
+                data['data'].reverse()
+
+        if 'search' in request.POST:
+            data['data'] = list(filter(lambda x: x[1] == request.POST.get('search'), data['data']))
+
+
+    if len(books) < 6 and not filterid:
         data['next_page'] = page
         data['undo_page'] = page
-    elif page == 0:
-        data['undo_page'] = page
-    elif len(books) - 6 * page < 6:
+    elif filterid and len(data['data']) < 6:
         data['next_page'] = page
+        data['undo_page'] = page
+    elif page == 0 and not filterid:
+        data['undo_page'] = page
+    elif len(books) - 6 * page < 6 or len(data['data']) - 6 * page:
+        data['next_page'] = page
+
+
         
     return render(request, 'books.html', context=data)
 
@@ -74,8 +95,8 @@ def auth(request):
 def registarion(request):
     if request.method == 'GET':
         data = {
-            'email_error': ['gray', ''],
-            'password_error': ['gray', '']
+            'email_error': ['#ddd', ''],
+            'password_error': ['#ddd', '']
         }
         return render(request, 'signup.html', context=data)
     else:
@@ -99,21 +120,21 @@ def registarion(request):
             if text == 'Email error':
                 data = {
                     'email_error': ['red', text],
-                    'password_error': ['gray', '']
+                    'password_error': ['#ddd', '']
                 }
             else:
                 data = {
-                    'email_error': ['gray', ''],
+                    'email_error': ['#ddd', ''],
                     'password_error': ['red', text]
                 }
             return render(request, 'signup.html', context=data)
 
 def addNewBook(request):
     data = {
-        'error_name': ['gray', 'none'],
-        'error_author': ['gray', 'none'],
-        'error_year': ['gray', 'none'],
-        'description_error': ['gray', 'none'],
+        'error_name': ['#ddd', 'none'],
+        'error_author': ['#ddd', 'none'],
+        'error_year': ['#ddd', 'none'],
+        'description_error': ['#ddd', 'none'],
         'error_load': 'none'
     }
     if request.method == 'GET':
@@ -163,10 +184,10 @@ def edit_book(request, id):
     id = [i[0] for i in all_books].index(id)
     curent_book = all_books[id]
     data = {
-        'error_name': ['gray', 'none'],
-        'error_author': ['gray', 'none'],
-        'error_year': ['gray', 'none'],
-        'description_error': ['gray', 'none'],
+        'error_name': ['#ddd', 'none'],
+        'error_author': ['#ddd', 'none'],
+        'error_year': ['#ddd', 'none'],
+        'description_error': ['#ddd', 'none'],
         'error_load': 'none',
         'name': curent_book[1],
         'author': curent_book[2],
@@ -221,4 +242,30 @@ def edit_book(request, id):
     return render(request, 'edit_book.html', context=data)
 
 def book(request, id):
-    pass
+    db = mysql_connect.Db()
+    first_id = id
+    all_books = db.getBooks()
+    id = [i[0] for i in all_books].index(id)
+    curent_book = all_books[id]
+    data = {
+        'id': first_id,
+        'name': curent_book[1],
+        'autor': curent_book[2],
+        'year': curent_book[3],
+        'desk': curent_book[5],
+        'img': curent_book[6],
+        'genre': curent_book[4]
+    }
+    return render(request, 'book.html', context=data)
+
+def delete_book(request, id):
+    data = {
+        'id': id
+    }
+    return render(request, 'delete_book.html', context=data)
+
+def delete(request, id):
+    db = mysql_connect.Db()
+    if db.deleteBook(id):
+        print("Успех")
+    return redirect('/')

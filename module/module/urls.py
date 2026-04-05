@@ -26,5 +26,8 @@ urlpatterns = [
     path('add_new_film/', views.addNewBook),
     path('auth/', views.auth),
     path('edit_book/<int:id>', views.edit_book),
+    path('book/<int:id>', views.book),
+    path('delete_book/<int:id>', views.delete_book),
+    path('delete/<int:id>', views.delete)
 
 ]

@@ -33,30 +33,36 @@
                 <!-- Панель управления -->
                 <div class="control-panel">
                     <form action=" " method="post">
+
+                        {% csrf_token %}
                         <div class="search-box">
                             <input type="text" placeholder="Поиск по названию..." name="search">
-                            <button type="submit" class="btn btn-search"><i class="fas fa-search"></i>Найти</button>
+                            <button type="submit" class="btn btn-search" ><i class="fas fa-search"></i>Найти</button>
                         </div>
                     </form>
                     <div class="filters">
-                        <form action=" " class="row g-2" method="post">
+                        <form action="" class="row g-2" method="post">
+
+                            {% csrf_token %}
                             <select class="form-control" name='search_genre'>
-                            <option value="0">Выберите жанр</option>
-                            <option value="1">Фантастика</option>
-                            <option value="2">Классика</option>
-                            <option value="3">Детектив</option>
-                            <option value="4">Роман</option>
-                            <option value="5">Научная литература</option>
-                            <option value="6">Биография</option>
+                            <option value="-1">Выберите жанр</option>
+                            <option value="Фантастика">Фантастика</option>
+                            <option value="Классика">Классика</option>
+                            <option value="Детектив">Детектив</option>
+                            <option value="Роман">Роман</option>
+                            <option value="Научная литература">Научная литература</option>
+                            <option value="Биография">Биография</option>
                             </select>
-                            <button class="btn btn-primary">Выбрать</button>
+                            <button class="btn btn-primary" type="submit">Выбрать</button>
                         </form>
-                        <form action=" " class="row g-2"  method="post">
+                        <form action="" class="row g-2"  method="post">
+
+                            {% csrf_token %}
                             <select class="form-control" name="alpha">
                                 <option value="ASC">По названию (А-Я)</option>
                                 <option value="DESC">По названию (Я-А)</option>
                             </select>
-                            <button class="btn btn-primary" >Сортировать</button>
+                            <button class="btn btn-primary" type="submit">Сортировать</button>
                         </form>                        
                     </div>
                 </div>
@@ -66,10 +72,10 @@
                      <div class="book-card">
                         <div class="book-cover">
                             <img src="../static/uploads/{{i.6}}" alt="Обложка книги">
-                            <a href="book.html">{{ i.1 }}</a>
+                            <a href="/book/{{i.0}}">{{ i.1 }}</a>
                         </div>
                         <div class="book-info">
-                            <h3 class="book-title"><a href="book.html"> </a></h3>
+                            <h3 class="book-title"><a href="/book/{{i.0}}">{{i.1}}</a></h3>
                             <p class="book-author">{{ i.2 }}</p>
                             <div class="book-meta">
                                 <span class="book-year"><i class="fas fa-calendar-alt">{{ i.3 }}</i>
