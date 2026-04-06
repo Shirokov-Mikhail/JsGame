@@ -1,107 +1,213 @@
-from django.core.validators import DomainNameValidator
+from django.contrib.auth.hashers import check_password, make_password
 from django.db import connection
-from django.contrib.auth.hashers import make_password, check_password
 
 
 class Db:
     def __init__(self):
         self.cur = connection.cursor()
+        self.id = None
 
-    def get_users(self):
-        try:
-            self.cur.execute('''SELECT `id`, `login`, `password` FROM `users`''')
-            content = self.cur.fetchall()
-            self.mails = [i[1] for i in content]
-            self.passwords = [i[2] for i in content]
-            self.all_id = [int(i[0]) for i in content]
-            return
-        except Exception as e:
-            return ValueError(e)
+    def _next_user_id(self):
+        self.cur.execute("SELECT COALESCE(MAX(`id`), -1) + 1 FROM `users`")
+        return int(self.cur.fetchone()[0])
+
+    def _next_book_id(self):
+        self.cur.execute("SELECT COALESCE(MAX(`id`), -1) + 1 FROM `books`")
+        return int(self.cur.fetchone()[0])
+
+    @staticmethod
+    def _normalize_books(rows):
+        # Normalize DB rows to the tuple shape used by the templates.
+        return [
+            (
+                int(row[0]),
+                row[1],
+                row[2],
+                int(row[3]),
+                row[4] or 'NONE',
+                row[5],
+                row[6],
+                int(row[7]),
+            )
+            for row in rows
+        ]
 
     def auth(self, mail, password):
         try:
-            self.get_users()
-            if mail in self.mails:
-                self.id = self.mails.index(mail)
-                if check_password(password, self.passwords[self.id]):
-                    return True
-                return ValueError('Password error')
-            return ValueError('Email error')
+            self.cur.execute(
+                "SELECT `id`, `password` FROM `users` WHERE `login`=%s LIMIT 1",
+                [mail],
+            )
+            user = self.cur.fetchone()
+            if not user:
+                return ValueError('Email error')
+
+            user_id, saved_password = int(user[0]), user[1]
+            # Keep backward compatibility with both hashed and plaintext passwords.
+            if check_password(password, saved_password) or saved_password == password:
+                self.id = user_id
+                return True
+
+            return ValueError('Password error')
         except Exception as e:
             print('auth', e)
             return False
 
     def registarion(self, mail, password):
         try:
-            self.get_users()
-            if mail not in self.mails and len(password) >= 3:
-                self.cur.execute(
-                    f'''INSERT INTO `users`(`id`, `login`, `password`) VALUES ('{max(self.all_id) + 1}','{mail}','{make_password(password)}')''')
-                self.id = int(max(self.all_id) + 1)
-                return True
-            elif mail not in self.mails:
+            self.cur.execute("SELECT 1 FROM `users` WHERE `login`=%s LIMIT 1", [mail])
+            if self.cur.fetchone():
+                return ValueError('Email error')
+
+            if len(password) < 3:
                 return ValueError('Password error')
-            return ValueError('Email error')
+
+            new_id = self._next_user_id()
+            self.cur.execute(
+                "INSERT INTO `users` (`id`, `login`, `password`) VALUES (%s, %s, %s)",
+                [new_id, mail, make_password(password)],
+            )
+            self.id = new_id
+            return True
         except Exception as e:
             print('registarion', e)
             return False
 
+    def countBooks(self):
+        try:
+            self.cur.execute("SELECT COUNT(*) FROM `books`")
+            return int(self.cur.fetchone()[0])
+        except Exception as e:
+            print('count books', e)
+            return 0
+
     def getBooks(self):
         try:
-            self.cur.execute('''SELECT `id`, `name`, `author`,`year`, `genre`, `description`, `poster`, `page` FROM `books`''')
-            content = self.cur.fetchall()
-            self.books = [(int(i[0]), i[1], i[2], i[3], self.genreForId(int(i[4])), i[5], i[6], int(i[7])) for i in content]
-            return self.books
+            self.cur.execute(
+                """
+                SELECT
+                    b.`id`,
+                    b.`name`,
+                    b.`author`,
+                    b.`year`,
+                    g.`name`,
+                    b.`description`,
+                    b.`poster`,
+                    b.`page`
+                FROM `books` AS b
+                LEFT JOIN `genre` AS g ON g.`id` = b.`genre`
+                ORDER BY b.`id`
+                """
+            )
+            return self._normalize_books(self.cur.fetchall())
         except Exception as e:
             print('get books', e)
             return []
 
-    def addBook(self, name, author,year, genre_id: int, description, poster_name, page: int):
+    def getBooksPage(self, page: int, page_size: int):
         try:
-            print(name, author, year, genre_id, description, poster_name, page)
-            self.getBooks()
-            books = max(self.books, key=lambda x: x[0])
-            print(books)
+            offset = max(page, 0) * page_size
             self.cur.execute(
-                f'''INSERT INTO `books`(`id`, `name`, `author`,`year`, `genre`, `description`, `poster`, `page`)
-                 VALUES ('{books[0] + 1}','{name}','{author}', '{year}','{genre_id}','{description}','{poster_name}','{page}')''')
+                """
+                SELECT
+                    b.`id`,
+                    b.`name`,
+                    b.`author`,
+                    b.`year`,
+                    g.`name`,
+                    b.`description`,
+                    b.`poster`,
+                    b.`page`
+                FROM `books` AS b
+                LEFT JOIN `genre` AS g ON g.`id` = b.`genre`
+                ORDER BY b.`id`
+                LIMIT %s OFFSET %s
+                """,
+                [page_size, offset],
+            )
+            return self._normalize_books(self.cur.fetchall())
+        except Exception as e:
+            print('get books page', e)
+            return []
+
+    def getBookById(self, book_id: int):
+        try:
+            self.cur.execute(
+                """
+                SELECT
+                    b.`id`,
+                    b.`name`,
+                    b.`author`,
+                    b.`year`,
+                    g.`name`,
+                    b.`description`,
+                    b.`poster`,
+                    b.`page`
+                FROM `books` AS b
+                LEFT JOIN `genre` AS g ON g.`id` = b.`genre`
+                WHERE b.`id` = %s
+                LIMIT 1
+                """,
+                [book_id],
+            )
+            row = self.cur.fetchone()
+            if not row:
+                return None
+            return self._normalize_books([row])[0]
+        except Exception as e:
+            print('get book by id', e)
+            return None
+
+    def addBook(self, name, author, year, genre_id: int, description, poster_name, page: int):
+        try:
+            new_id = self._next_book_id()
+            self.cur.execute(
+                """
+                INSERT INTO `books` (`id`, `name`, `author`, `year`, `genre`, `description`, `poster`, `page`)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                """,
+                [new_id, name, author, year, genre_id, description, poster_name, page],
+            )
             return True
         except Exception as e:
             print('addbook', e)
             return False
 
     def editBook(self, id: int, name, author, year, genre_id: int, description, poster_name, page: int):
-            try:
-                if poster_name != '':
-                    self.cur.execute(f'''UPDATE `books` SET `name`='{name}',`author`='{author}',`genre`='{genre_id}',
-                `description`='{description}',`poster`='{poster_name}',`page`='{page}', `year`='{year}' WHERE id='{id}' ''')
-                else:
-                    self.cur.execute(f'''UPDATE `books` SET `name`='{name}',`author`='{author}',`genre`='{genre_id}',
-                `description`='{description}',`page`='{page}',`year`='{year}' WHERE id='{id}' ''')
+        try:
+            if poster_name != '':
+                self.cur.execute(
+                    """
+                    UPDATE `books`
+                    SET `name`=%s, `author`=%s, `genre`=%s, `description`=%s, `poster`=%s, `page`=%s, `year`=%s
+                    WHERE `id`=%s
+                    """,
+                    [name, author, genre_id, description, poster_name, page, year, id],
+                )
                 return True
-            except Exception as e:
-                print('editbook', e)
-                return False
+
+            self.cur.execute(
+                """
+                UPDATE `books`
+                SET `name`=%s, `author`=%s, `genre`=%s, `description`=%s, `page`=%s, `year`=%s
+                WHERE `id`=%s
+                """,
+                [name, author, genre_id, description, page, year, id],
+            )
+            return True
+        except Exception as e:
+            print('editbook', e)
+            return False
 
     def deleteBook(self, id: int):
         try:
-            self.cur.execute(f'''DELETE FROM `books` WHERE id='{id}' ''')
+            self.cur.execute("DELETE FROM `books` WHERE `id`=%s", [id])
             return True
         except Exception as e:
             print('delete', e)
             return False
 
-    def genreForId(self, id):
-        try:
-            self.cur.execute('''SELECT `id`, `name` FROM `genre`''')
-            result = self.cur.fetchall()
-            name = [i[1] for i in result][id]
-            return name
-        except Exception as e:
-            print('genres', e)
-            return 'NONE'
 
 if __name__ == '__main__':
     db = Db()
     print(db.registarion('m9339323029@gmail.com', '123'))
-
