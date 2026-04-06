@@ -4,6 +4,46 @@ from django.shortcuts import redirect, render
 from django.views.decorators.csrf import ensure_csrf_cookie
 from . import mysql_connect, settings
 
+
+class Functions:
+    def __init__(self):
+        pass
+
+    def save_file(self, file):
+        upload_path = os.path.join(settings.BASE_DIR, 'module/static/uploads/', file.name)
+
+        os.makedirs(os.path.dirname(upload_path), exist_ok=True)
+
+        with open(upload_path, 'wb+') as destination:
+            for chunk in file.chunks():
+                destination.write(chunk)
+
+        file_url = f'uploads/{file.name}'
+        return file_url
+
+    def check_len(self, value, max_len=100):
+        if len(value) > max_len:
+            return True
+        return False
+
+    def check_input_errors(self,name, author, description, year, data):
+        if len(description) > 500:
+            data['description_error'] = ['red', 'block']
+        if len(name) > 100:
+            data['error_name'] = ['red', 'block']
+        if len(author) > 100:
+            data['error_author'] = ['red', 'block']
+        if int(year) < 1800 or int(year) > 2026:
+            data['error_year'] = ['red', 'block']
+        return data
+
+
+import os
+
+from django.shortcuts import redirect, render
+from django.views.decorators.csrf import ensure_csrf_cookie
+from . import mysql_connect, settings
+
 def save_file(file):
     if file:
         upload_path = os.path.join(settings.BASE_DIR, 'module/static/uploads/', file.name)
@@ -97,7 +137,7 @@ def books(request, page):
         data['next_page'] = page
 
 
-        
+
     return render(request, 'books.html', context=data)
 
 @ensure_csrf_cookie
@@ -163,19 +203,7 @@ def addNewBook(request):
     error = False
     print(request.FILES)
     if poster:
-        # 1. Формируем путь (лучше использовать абсолютный через BASE_DIR)
-        upload_path = os.path.join(settings.BASE_DIR, 'module/static/uploads/', poster.name)
-
-        # 2. Создаем директорию, если её нет
-        os.makedirs(os.path.dirname(upload_path), exist_ok=True)
-
-        # 3. ПРАВИЛЬНО записываем файл
-        with open(upload_path, 'wb+') as destination:
-            for chunk in poster.chunks():
-                destination.write(chunk)
-
-        # 4. В базу обычно сохраняют ПУТЬ к файлу или только имя
-        file_url = f'uploads/{poster.name}'
+        save_file(poster)
     if len(description) > 500:
         error = True
         data['description_error'] = ['red', 'block']
@@ -196,6 +224,7 @@ def edit_book(request, id):
     db = mysql_connect.Db()
     all_books = db.getBooks()
     id = [i[0] for i in all_books].index(id)
+    #возможно нужно добавить еще в mysql-connect
     curent_book = all_books[id]
     data = {
         'error_name': ['#ddd', 'none'],
@@ -206,51 +235,23 @@ def edit_book(request, id):
         'name': curent_book[1],
         'author': curent_book[2],
         'year': curent_book[3],
-        'desk': curent_book[5]
+        'desk': curent_book[5],
+        'poster': None
     }
     if request.method == 'GET':
         return render(request, 'edit_book.html' ,context=data)
 
-    name = request.POST.get('name')
-    author = request.POST.get('author')
-    genre = request.POST.get('genre')
-    year = request.POST.get('year_of_publication')
-    description = request.POST.get('description')
+    name = (request.POST.get('name') or '').strip()
+    author =(request.POST.get('author') or '').strip()
+    genre = (request.POST.get('genre') or '').strip()
+    year = (request.POST.get('year_of_publication') or '').strip()
+    description = (request.POST.get('description') or '').strip()
     poster = request.FILES.get('cover')
-    error = False
-    print(request.FILES)
     if poster:
-        # 1. Формируем путь (лучше использовать абсолютный через BASE_DIR)
-        upload_path = os.path.join(settings.BASE_DIR, 'module/static/uploads/', poster.name)
-
-        # 2. Создаем директорию, если её нет
-        os.makedirs(os.path.dirname(upload_path), exist_ok=True)
-
-        # 3. ПРАВИЛЬНО записываем файл
-        with open(upload_path, 'wb+') as destination:
-            for chunk in poster.chunks():
-                destination.write(chunk)
-
-        # 4. В базу обычно сохраняют ПУТЬ к файлу или только имя
-        file_url = f'uploads/{poster.name}'
-    else:
-        poster = ''
-    if len(description) > 500:
-        error = True
-        data['description_error'] = ['red', 'block']
-    if len(name) > 100:
-        error = True
-        data['error_name'] = ['red', 'block']
-    if len(author) > 100:
-        error = True
-        data['error_author'] = ['red', 'block']
-    if int(year) < 1800 or int(year) > 2026:
-        error = True
-        data['error_year'] = ['red', 'block']
-    if not error and poster != '' and db.editBook(id, name, author, year, genre, description, poster.name, 0):
-        print('DA')
-    elif not error and db.editBook(id, name, author, year, genre, description, '', 0):
-        print('NET')
+        data['poster'] = poster.name
+        save_file(poster)
+    #class
+    db.editBook(id, name, author, year, genre, description, data['poster'], 0)
 
     return render(request, 'edit_book.html', context=data)
 
