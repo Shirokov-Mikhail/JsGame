@@ -4,8 +4,12 @@ from django.shortcuts import redirect, render
 from django.views.decorators.csrf import ensure_csrf_cookie
 from . import mysql_connect, settings
 
-def save_file(file):
-    if file:
+
+class Functions:
+    def __init__(self):
+        pass
+
+    def save_file(self, file):
         upload_path = os.path.join(settings.BASE_DIR, 'module/static/uploads/', file.name)
 
         os.makedirs(os.path.dirname(upload_path), exist_ok=True)
@@ -15,47 +19,74 @@ def save_file(file):
                 destination.write(chunk)
 
         file_url = f'uploads/{file.name}'
-    return file_url
+        return file_url
+
+    def check_len(self, value, max_len=100):
+        if len(value) > max_len:
+            return True
+        return False
+
+    def check_input_errors(self,name, author, description, year, data):
+        errors = False
+        if len(description) > 500:
+            data['description_error'] = ['red', 'block']
+            errors = True
+        if len(name) > 100:
+            data['error_name'] = ['red', 'block']
+            errors = True
+        if len(author) > 100:
+            data['error_author'] = ['red', 'block']
+            errors = True
+        if int(year) < 1800 or int(year) > 2026:
+            data['error_year'] = ['red', 'block']
+            errors = True
+        return [data, not errors]
+
+    def check_auth(self, retr, data):
+        if isinstance(retr, ValueError):
+            if retr == 'Email error':
+                data['email_error'] = ['red', retr]
+                data['password_error'] = ['#ddd', '']
+            elif retr == 'Password error':
+                data['email_error'] = ['ddd', '']
+                data['password_error'] = ['red', retr]
+            else:
+                data['email_error'] = ['red', retr]
+                data['password_error'] = ['red', retr]
+            return [False, data]
+        elif retr and isinstance(retr, bool):
+            return [True, data]
+
+        data['email_error'] = ['red', retr]
+        data['password_error'] = ['red', retr]
+        return [False, data]
 
 @ensure_csrf_cookie
 def index(request):
     if 'auth' not in request.session:
         request.session['auth'] = False
-        request.session['id'] = -1
     if not request.session['auth']:
-        if request.method == 'GET':
-            data = {
-                'email_error': ['#ddd', ''],
-                'password_error': ['#ddd', '']
+        data = {
+            'email_error': ['#ddd', ''],
+            'password_error': ['#ddd', '']
 
-            }
+        }
+        if request.method == 'GET':
             return render(request, 'index.html', context=data)
         else:
-            try:
-                db = mysql_connect.Db()
-                email = request.POST.get('email')
-                password = request.POST.get('password')
-                if db.auth(email, password):
-                    request.session['auth'] = True
-                    request.session['id'] = db.id
-                    return redirect('/books/0')
-                data = {
-                    'email_error': ['red', 'Ошибка Mysql'],
-                    'password_error': ['red', 'Ошибка Mysql']
-                }
-                return render(request, 'index.html', context=data)
-            except ValueError as text:
-                if text == 'Email error':
-                    data = {
-                        'email_error': ['red', text],
-                        'password_error': ['#ddd', '']
-                    }
-                else:
-                    data = {
-                        'email_error': ['#ddd', ''],
-                        'password_error': ['red', text]
-                    }
-                return render(request, 'index.html', context=data)
+            db = mysql_connect.Db()
+            email = request.POST.get('email')
+            password = request.POST.get('password')
+            rg = db.auth(email, password)
+            f = Functions()
+            all_return = f.check_auth(rg, data)
+            data = all_return[1]
+            rg = all_return[0]
+            if rg:
+                request.session['auth'] = True
+                return redirect('/books/0')
+            return render(request, 'index.html', context=data)
+
     else:
         return redirect('/books/0')
 
@@ -97,7 +128,7 @@ def books(request, page):
         data['next_page'] = page
 
 
-        
+
     return render(request, 'books.html', context=data)
 
 @ensure_csrf_cookie
@@ -107,41 +138,27 @@ def auth(request):
 
 @ensure_csrf_cookie
 def registarion(request):
+    if 'auth' not in request.session:
+        request.session['auth'] = False
+    data = {
+        'email_error': ['#ddd', ''],
+        'password_error': ['#ddd', '']
+    }
     if request.method == 'GET':
-        data = {
-            'email_error': ['#ddd', ''],
-            'password_error': ['#ddd', '']
-        }
         return render(request, 'signup.html', context=data)
     else:
-        try:
-            db = mysql_connect.Db()
-            email = request.POST.get('email')
-            password = request.POST.get('password')
-            rg = db.registarion(email, password)
-            if rg and type(rg) == bool:
-                request.session['auth'] = True
-                request.session['id'] = db.id
-                return redirect('')
-            elif type(rg) != bool:
-                raise ValueError(rg)
-            data = {
-                'email_error': ['red', 'Ошибка Mysql'],
-                'password_error': ['red', 'Ошибка Mysql']
-            }
-            return render(request, 'signup.html', context=data)
-        except ValueError as text:
-            if text == 'Email error':
-                data = {
-                    'email_error': ['red', text],
-                    'password_error': ['#ddd', '']
-                }
-            else:
-                data = {
-                    'email_error': ['#ddd', ''],
-                    'password_error': ['red', text]
-                }
-            return render(request, 'signup.html', context=data)
+        db = mysql_connect.Db()
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        rg = db.auth(email, password)
+        f = Functions()
+        all_return = f.check_auth(rg, data)
+        data = all_return[1]
+        rg = all_return[0]
+        if rg:
+            request.session['auth'] = True
+            return redirect('/books/0')
+        return render(request, 'signup.html', context=data)
 
 def addNewBook(request):
     data = {
@@ -149,7 +166,8 @@ def addNewBook(request):
         'error_author': ['#ddd', 'none'],
         'error_year': ['#ddd', 'none'],
         'description_error': ['#ddd', 'none'],
-        'error_load': 'none'
+        'error_load': 'none',
+        'poster': None
     }
     if request.method == 'GET':
         return render(request, 'add_book.html' ,context=data)
@@ -160,36 +178,14 @@ def addNewBook(request):
     year = request.POST.get('year_of_publication')
     description = request.POST.get('description')
     poster = request.FILES.get('cover')
-    error = False
     print(request.FILES)
+    f = Functions()
+    data, erors = f.check_input_errors(name, author, description, year, data)
     if poster:
-        # 1. Формируем путь (лучше использовать абсолютный через BASE_DIR)
-        upload_path = os.path.join(settings.BASE_DIR, 'module/static/uploads/', poster.name)
-
-        # 2. Создаем директорию, если её нет
-        os.makedirs(os.path.dirname(upload_path), exist_ok=True)
-
-        # 3. ПРАВИЛЬНО записываем файл
-        with open(upload_path, 'wb+') as destination:
-            for chunk in poster.chunks():
-                destination.write(chunk)
-
-        # 4. В базу обычно сохраняют ПУТЬ к файлу или только имя
-        file_url = f'uploads/{poster.name}'
-    if len(description) > 500:
-        error = True
-        data['description_error'] = ['red', 'block']
-    if len(name) > 100:
-        error = True
-        data['error_name'] = ['red', 'block']
-    if len(author) > 100:
-        error = True
-        data['error_author'] = ['red', 'block']
-    if int(year) < 1800 or int(year) > 2026:
-        error = True
-        data['error_year'] = ['red', 'block']
-    if not error and db.addBook(name, author, year, genre, description, poster.name, 0):
-        return redirect('/')
+        data['poster'] = poster.name
+        f.save_file(poster)
+    if erors:
+        db.addBook(name, author, year, genre, description, data['poster'], 0)
     return render(request, 'add_book.html', context=data)
 
 def edit_book(request, id):
@@ -206,7 +202,8 @@ def edit_book(request, id):
         'name': curent_book[1],
         'author': curent_book[2],
         'year': curent_book[3],
-        'desk': curent_book[5]
+        'desk': curent_book[5],
+        'poster': None
     }
     if request.method == 'GET':
         return render(request, 'edit_book.html' ,context=data)
@@ -217,41 +214,14 @@ def edit_book(request, id):
     year = request.POST.get('year_of_publication')
     description = request.POST.get('description')
     poster = request.FILES.get('cover')
-    error = False
     print(request.FILES)
+    f = Functions()
+    data, erors = f.check_input_errors(name, author, description, year, data)
     if poster:
-        # 1. Формируем путь (лучше использовать абсолютный через BASE_DIR)
-        upload_path = os.path.join(settings.BASE_DIR, 'module/static/uploads/', poster.name)
-
-        # 2. Создаем директорию, если её нет
-        os.makedirs(os.path.dirname(upload_path), exist_ok=True)
-
-        # 3. ПРАВИЛЬНО записываем файл
-        with open(upload_path, 'wb+') as destination:
-            for chunk in poster.chunks():
-                destination.write(chunk)
-
-        # 4. В базу обычно сохраняют ПУТЬ к файлу или только имя
-        file_url = f'uploads/{poster.name}'
-    else:
-        poster = ''
-    if len(description) > 500:
-        error = True
-        data['description_error'] = ['red', 'block']
-    if len(name) > 100:
-        error = True
-        data['error_name'] = ['red', 'block']
-    if len(author) > 100:
-        error = True
-        data['error_author'] = ['red', 'block']
-    if int(year) < 1800 or int(year) > 2026:
-        error = True
-        data['error_year'] = ['red', 'block']
-    if not error and poster != '' and db.editBook(id, name, author, year, genre, description, poster.name, 0):
-        print('DA')
-    elif not error and db.editBook(id, name, author, year, genre, description, '', 0):
-        print('NET')
-
+        data['poster'] = poster.name
+        f.save_file(poster)
+    if erors:
+        db.addBook(name, author, year, genre, description, data['poster'], 0)
     return render(request, 'edit_book.html', context=data)
 
 def book(request, id):

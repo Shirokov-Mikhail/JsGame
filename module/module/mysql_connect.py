@@ -72,7 +72,7 @@ class Db:
 
     def editBook(self, id: int, name, author, year, genre_id: int, description, poster_name, page: int):
             try:
-                if poster_name != '':
+                if poster_name != '' and poster_name:
                     self.cur.execute(f'''UPDATE `books` SET `name`='{name}',`author`='{author}',`genre`='{genre_id}',
                 `description`='{description}',`poster`='{poster_name}',`page`='{page}', `year`='{year}' WHERE id='{id}' ''')
                 else:
