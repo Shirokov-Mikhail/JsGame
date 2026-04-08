@@ -15,8 +15,28 @@
     --text-font: "Roboto", sans-serif;
     --foter-color: #FFFFFF;
 }
+@keyframes slide-in {
+    0%{
+        opacity: 0;
+        transform: translateY(400px);
+    }
+    50%{
+        opacity: 2;
+        transform: translateY(100px);
+    }
+    100%{
+        opacity: 0;
+        transform: translateY(0);
+    }
+}
 body{
     background-color: var(--main-fone-color);
+    view-timeline-axis: block;
+    view-timeline-name: --revealing-element;
+
+    animation: slide-in linar forwards;
+    animation-timeline: --revealing-element;
+    animation-fill-mode: both;
 }
 .title{
     font-size: 20px;

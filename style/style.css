@@ -51,10 +51,33 @@ body{
 .button:hover{
     animation: pulse 1s infinite ease-in-out;
 }
+@keyframes slide-in {
+    0%{
+        opacity: 0;
+        transform: translateY(600px);
+    }
+    50%{
+        opacity: 2;
+        transform: translateY(50px);
+    }
+    100%{
+        opacity: 0;
+        transform: translateY(0);
+    }
+
+}
 
 .container{
     margin-top: 35px;
     margin-bottom: 35px;
+
+    view-timeline-name: --revealing-element;
+    view-timeline-axis: block;
+
+    /* Сама анимация */
+    animation: slide-in linear forwards;
+    animation-timeline: --revealing-element;
+    animation-fill-mode: both;
 }
 main{
     display: flex;
@@ -241,8 +264,10 @@ main{
     justify-content: start;
     flex-wrap: wrap;
     align-items: center;
-    width: 50%;
-    margin: 1%;
+    width: 60%;
+    padding: 5%;
+    border: 1px solid var(--main-font-color);
+
 
 }
 /* тут поправить надо */
@@ -268,6 +293,7 @@ footer{
     justify-content: center;
     flex-wrap: wrap;
     background-color: var();
+    opacity: 1 !important;
 
 }
 .info{
