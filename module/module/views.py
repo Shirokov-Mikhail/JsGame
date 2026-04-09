@@ -44,10 +44,10 @@ class Functions:
 
     def check_auth(self, retr, data):
         if isinstance(retr, ValueError):
-            if retr == 'Email error':
+            if str(retr) == 'Email error':
                 data['email_error'] = ['red', retr]
                 data['password_error'] = ['#ddd', '']
-            elif retr == 'Password error':
+            elif str(retr) == 'Password error':
                 data['email_error'] = ['ddd', '']
                 data['password_error'] = ['red', retr]
             else:
