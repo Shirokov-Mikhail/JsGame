@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 56" role="img">
+  <title>Crystal</title>
+  <path d="M24 4 L44 22 L36 52 L12 52 L4 22 Z" fill="#a855f7" stroke="#c4b5fd" stroke-width="1.5"/>
+  <path d="M24 4 L24 52 M4 22 L44 22" stroke="#7c3aed" stroke-width="0.8" opacity="0.6"/>
+  <path d="M14 18 L34 18 L24 8 Z" fill="#e9d5ff" opacity="0.9"/>
+</svg>

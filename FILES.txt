@@ -1,0 +1,50 @@
+Ocean expedition — media + template starter for Module V (browser game, HTML/CSS/JS, no frameworks)
+
+FOLDER: ocean-expedition-game/
+
+HTML/CSS + ПАМЯТКА ДЛЯ JS (код игры пишет конкурсант)
+  index.html            — стартовый экран (имя + сложность), HUD, поле, пауза, окно результатов
+  static/css/game.css   — стили игровых экранов, HUD, оверлеев
+  static/js/game.js     — только комментарии-подсказки (без логики); подключение скрипта в index.html закомментировано
+
+media/
+  palette/colors.css
+    CSS variables: deep ocean HUD colors, accents (use in your style.css)
+
+  sprites/
+    bathyscaphe.svg      — player sub (DOM img or canvas drawImage)
+    crystal.svg          — collectible crystal (+1 score, counts toward sonar charge)
+    oxygen-capsule.svg    — +20% O2
+    repair-module.svg     — +20% hull (hidden on hard difficulty)
+    mine-small.svg        — 10 damage, smallest visual
+    mine-medium.svg       — 20 damage
+    mine-large.svg        — 30 damage, largest visual
+
+  bg/ocean-deep.svg
+    Full-screen friendly gradient background (1920x1080 viewBox, preserveAspectRatio slice)
+
+  ui/sonar-highlight-filter.svg
+    defs filter #sonarGlow — reference from JS/CSS when sonar active (mines slower 4s)
+
+  api/expedition.request.example.json
+    Sample POST body for http://HOST:8082/api/expedition (replace HOST with exam URL)
+
+INTEGRATION NOTES
+  • All SVG text uses ASCII only inside files (O2 on capsule) — safe for XML parsers.
+  • Scale sprites via CSS width/height or canvas draw size; vectors stay sharp.
+  • Difficulty (from spec):
+      Easy:   mines all 3 types, speed x1,   O2 -4%/s, sonar after 5 crystals, repair ON
+      Medium: medium+large mines, x1.4,     O2 -5%/s, sonar after 7 crystals, repair ON
+      Hard:   large mines only, x1.8,      O2 -6%/s, sonar OFF, repair OFF
+  • Timer display: MM:SS — format in JS from seconds.
+  • Sonar: E key, 4s effect, mines -40% speed, highlight mines (class + filter).
+
+ENDPOINT (from assignment)
+  POST http://<host>:8082/api/expedition
+  Content-Type: application/json
+  Body fields: client, name, time (seconds number), crystals, timestamp ISO 8601
+
+NOTE
+  In starter JS default URL is:
+    http://localhost:8082/api/expedition
+  Replace it with exam host before submission.

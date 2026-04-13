@@ -1,83 +1,94 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Rocket Game</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Батискаф: Океаническая экспедиция</title>
+  <link rel="stylesheet" href="media/palette/colors.css">
+  <link rel="stylesheet" href="static/css/game.css">
 </head>
 <body>
-    <!-- Start Screen -->
-    <div id="start-screen">
-        <div class="start-container">
-            <h1>Space Rocket</h1>
-            <input type="text" id="player-name" placeholder="Введите ваше имя">
-            <div class="difficulty">
-                <input type="radio" id="easy" name="difficulty" value="easy">
-                <label for="easy">Легкий</label>
-                <input type="radio" id="medium" name="difficulty" value="medium" checked>
-                <label for="medium">Средний</label>
-                <input type="radio" id="hard" name="difficulty" value="hard">
-                <label for="hard">Сложный</label>
-            </div>
-            <!-- <button class="start-btn" disabled>Start Game</button> -->
-            <button class="start-btn" id="start-btn">Начать игру</button>
+  <main id="app">
+    <section id="start-screen" class="overlay is-visible" aria-label="Стартовый экран">
+      <div class="panel">
+        <h1>Океаническая экспедиция</h1>
+        <p class="muted">Управляйте батискафом, собирайте кристаллы и избегайте мин.</p>
+        <form id="start-form" class="form-grid">
+          <label for="player-name">Имя игрока</label>
+          <input id="player-name" name="playerName" type="text" minlength="2" maxlength="24" required>
+
+          <label for="difficulty">Уровень сложности</label>
+          <select id="difficulty" name="difficulty">
+            <option value="easy">Лёгкий</option>
+            <option value="medium" selected>Средний</option>
+            <option value="hard">Сложный</option>
+          </select>
+
+          <!-- По ТЗ кнопка неактивна без имени — включите disabled в своём JS -->
+          <button id="start-btn" class="btn" type="button">Начать погружение</button>
+        </form>
+        <div class="controls-hint">
+          <span>WASD / ←↑↓→ — движение</span>
+          <span>P — пауза</span>
+          <span>E — сонар</span>
         </div>
-    </div>
+      </div>
+    </section>
 
-    <!-- Game Screen -->
-    <div id="game-screen">
-        <div class="hud">
-            <div class="timer" id="timer">Время: 00:00</div>
-            <div class="coins" id="coins">Монеты: 0</div>
-            <div class="health-bar" id="health-bar">Здоровье: 100%</div>
-            <div class="fuel2" id="fuel2">Топливо: 100%</div>
+    <section id="countdown-screen" class="overlay" aria-label="Обратный отсчёт">
+      <div class="countdown-text" id="countdown-text">3</div>
+    </section>
+
+    <section id="pause-screen" class="overlay" aria-label="Пауза">
+      <div class="panel panel-sm">
+        <h2>Пауза</h2>
+        <p class="muted">Нажмите P, чтобы продолжить.</p>
+      </div>
+    </section>
+
+    <section id="result-screen" class="overlay" aria-label="Результаты">
+      <div class="panel">
+        <h2>Результаты погружения</h2>
+        <table class="result-table">
+          <tbody>
+            <tr><th>Игрок</th><td id="result-name">—</td></tr>
+            <tr><th>Время</th><td id="result-time">00:00</td></tr>
+            <tr><th>Кристаллы</th><td id="result-crystals">0</td></tr>
+          </tbody>
+        </table>
+
+        <div class="result-actions">
+          <button id="save-result-btn" class="btn" type="button">Сохранить результат</button>
+          <button id="retry-btn" class="btn btn-ghost" type="button">Повторить</button>
+          <button id="back-btn" class="btn btn-ghost" type="button">На старт</button>
         </div>
-        <canvas id="canvas" width="1920" height="1080"></canvas>
-        <!-- Objects will be added dynamically -->
-    </div>
+        <p id="save-status" class="muted" role="status"></p>
+      </div>
+    </section>
 
-    <!-- Pause Screen -->
-    <div id="pause-screen">
-        <div class="pause-container">
-            <h2 id="pause-text">Пауза</h2>
+    <section id="game-screen" aria-label="Игровое поле">
+      <header id="hud">
+        <div class="hud-item"><span>Таймер</span><strong id="hud-timer">00:00</strong></div>
+        <div class="hud-item"><span>Кристаллы</span><strong id="hud-crystals">0</strong></div>
+        <div class="hud-item">
+          <span>Прочность</span>
+          <div class="bar"><div id="hud-hull" class="bar-fill hull" style="width:100%"></div></div>
         </div>
-    </div>
-
-    <!-- Game Over Screen -->
-    <div id="game-over-screen">
-        <div class="game-over-container">
-            <h2>Конец игры</h2>
-            <table class="leaderboard">
-                <thead>
-                    <tr>
-                        <th>Ранг</th>
-                        <th>Никнейм</th>
-                        <th>Время</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <td id="rank-end">
-
-                </td>
-                <td id="name-end">
-
-                </td>
-                <td id="time-end">
-
-                </td>
-                    <!-- Leaderboard entries will be added dynamically -->
-                </tbody>
-            </table>
-            <button class="retry-btn" id="retry-btn">Начать заново</button>
-            <button class="menu-btn" id="menu-btn">В меню</button>
+        <div class="hud-item">
+          <span>Кислород <strong id="hud-oxygen-text">100%</strong></span>
+          <div class="bar"><div id="hud-oxygen" class="bar-fill oxygen" style="width:100%"></div></div>
         </div>
-    </div>
+        <div class="hud-item"><span>Сонар</span><strong id="hud-sonar">0</strong></div>
+      </header>
 
-    <!-- Countdown -->
-    <div id="countdown"></div>
+      <div id="playfield">
 
-    <script type="text/javascript" src="game2.js" >
-        </script>
+        <canvas id="canvas" width="1920" height="1080" style="border: 1px solid red"></canvas>
+      </div>
+    </section>
+  </main>
+
+<!--   Подключите свой скрипт с игровой логикой (конкурсант): -->
+   <script src="game.js" defer></script>
 </body>
 </html>

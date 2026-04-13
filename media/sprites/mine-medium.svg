@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img">
+  <title>Mine medium</title>
+  <circle cx="24" cy="24" r="14" fill="#3f3f46" stroke="#a1a1aa" stroke-width="2"/>
+  <path d="M24 0 L27 12 L24 9 L21 12 Z M48 24 L36 23 L39 24 L36 25 Z M24 48 L21 36 L24 39 L27 36 Z M0 24 L12 25 L9 24 L12 23 Z M42 6 L33 15 L36 12 L39 15 Z M6 6 L15 15 L12 12 L9 15 Z M42 42 L33 33 L36 36 L39 33 Z M6 42 L15 33 L12 36 L9 33 Z" fill="#71717a"/>
+  <circle cx="24" cy="24" r="5" fill="#ef4444"/>
+</svg>

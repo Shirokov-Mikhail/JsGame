@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" role="img">
+  <title>Deep ocean background</title>
+  <defs>
+    <linearGradient id="oceanGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0a1628"/>
+      <stop offset="40%" stop-color="#0c2740"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#164e63" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#020617" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#oceanGrad)"/>
+  <rect width="1920" height="1080" fill="url(#glow)"/>
+  <circle cx="200" cy="150" r="2" fill="#38bdf8" opacity="0.3"/>
+  <circle cx="800" cy="400" r="1.5" fill="#67e8f9" opacity="0.25"/>
+  <circle cx="1400" cy="200" r="2" fill="#22d3ee" opacity="0.2"/>
+  <circle cx="1600" cy="700" r="1" fill="#a5f3fc" opacity="0.2"/>
+</svg>

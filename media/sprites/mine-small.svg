@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" role="img">
+  <title>Mine small</title>
+  <circle cx="18" cy="18" r="10" fill="#475569" stroke="#94a3b8" stroke-width="1.5"/>
+  <path d="M18 2 L20 10 L18 8 L16 10 Z M34 18 L26 17 L28 18 L26 19 Z M18 34 L16 26 L18 28 L20 26 Z M2 18 L10 19 L8 18 L10 17 Z" fill="#64748b"/>
+  <circle cx="18" cy="18" r="3" fill="#f87171"/>
+</svg>

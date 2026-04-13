@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
+  <title>Mine large</title>
+  <circle cx="32" cy="32" r="20" fill="#27272a" stroke="#d4d4d8" stroke-width="2.5"/>
+  <path d="M32 0 L36 16 L32 12 L28 16 Z M64 32 L48 31 L52 32 L48 33 Z M32 64 L28 48 L32 52 L36 48 Z M0 32 L16 33 L12 32 L16 31 Z M56 8 L44 20 L48 16 L52 20 Z M8 8 L20 20 L16 16 L12 20 Z M56 56 L44 44 L48 48 L52 44 Z M8 56 L20 44 L16 48 L12 44 Z M48 16 L40 28 L44 24 L48 28 Z M16 16 L28 28 L24 24 L20 28 Z M48 48 L40 36 L44 40 L48 36 Z M16 48 L28 36 L24 40 L20 36 Z" fill="#52525b"/>
+  <circle cx="32" cy="32" r="8" fill="#dc2626"/>
+  <circle cx="32" cy="32" r="3" fill="#fecaca"/>
+</svg>

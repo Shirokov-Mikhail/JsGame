@@ -1,0 +1,17 @@
+/**
+ * Палитра «Океаническая экспедиция» — для HTML/CSS игры (Модуль В)
+ */
+:root {
+  --deep-ocean-top: #0a1628;
+  --deep-ocean-mid: #0c2740;
+  --deep-ocean-bottom: #051018;
+  --hud-bg: rgba(6, 20, 35, 0.85);
+  --hud-border: #1e4a6e;
+  --accent-cyan: #22d3ee;
+  --accent-magenta: #e879f9;
+  --danger: #f87171;
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --text: #e0f2fe;
+  --mine-spike: #64748b;
+}

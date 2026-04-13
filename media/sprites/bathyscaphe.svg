@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 96" role="img">
+  <title>Bathyscaphe</title>
+  <ellipse cx="40" cy="52" rx="32" ry="38" fill="#1e3a5f" stroke="#38bdf8" stroke-width="2"/>
+  <ellipse cx="40" cy="38" rx="22" ry="18" fill="#0ea5e9" stroke="#7dd3fc" stroke-width="1.5" opacity="0.9"/>
+  <rect x="34" y="8" width="12" height="14" rx="2" fill="#334155"/>
+  <path d="M8 52 Q40 88 72 52" fill="none" stroke="#475569" stroke-width="3"/>
+  <ellipse cx="40" cy="52" rx="8" ry="10" fill="#0f172a" opacity="0.4"/>
+</svg>
