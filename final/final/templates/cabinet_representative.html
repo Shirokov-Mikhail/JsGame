@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Модерация — представитель народа</title>
+  <link rel="stylesheet" href="static/css/tradicii.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="site-logo" href="index.html"><img src="media/img/logo.svg" width="180" height="48" alt=""></a>
+      <nav class="main-nav">
+        <a href="index.html">Каталог</a>
+        <span class="badge-year">Мой народ: татары</span>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding:24px 20px 48px;">
+    <h1>На модерации (только ваш народ)</h1>
+
+    <article class="tradition-card" style="max-width:720px;margin-bottom:24px;">
+      <img class="tradition-card__img" src="media/img/traditions/t-02.svg" alt="">
+      <div class="tradition-card__body">
+        <h2 class="tradition-card__title">Сабантуй — дополнение</h2>
+        <p class="tradition-card__people">Автор заявки: user_example</p>
+        <p class="tradition-card__excerpt">Текст описания для решения...</p>
+        <p><strong>История статусов:</strong> черновик → ожидает (текущее)</p>
+        <form method="post" action="#" class="form-grid" style="margin-top:12px;max-width:100%;">
+          <div class="form-row">
+            <label for="reject_reason">Причина отклонения (если отклоняете, минимум 5 символов)</label>
+            <textarea id="reject_reason" name="reject_reason" minlength="5"></textarea>
+          </div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <button type="submit" name="decision" value="approve" class="btn btn--primary">Одобрить</button>
+            <button type="submit" name="decision" value="reject" class="btn btn--danger">Отклонить</button>
+          </div>
+        </form>
+      </div>
+    </article>
+  </main>
+</body>
+</html>

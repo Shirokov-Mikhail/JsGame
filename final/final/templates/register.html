@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Регистрация — Традиции народов</title>
+  <link rel="stylesheet" href="/static/tradicii.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="site-logo" href="/">
+        <img src="/static/media/logo.svg" width="180" height="48" alt=""></a>
+      <nav class="main-nav">
+        <a href="/">Главная</a>
+        <a href="/auth/">Вход</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:520px;padding:40px 20px;">
+    <h1>Регистрация (роль «Пользователь»)</h1>
+    <form method="post" class="form-grid">
+      {% csrf_token %}
+      <div class="form-row">
+        <label for="display_name">Имя пользователя (минимум 10 символов)</label>
+        <input type="text" id="display_name" name="display_name" minlength="10" required>
+        <p class="field-error">{{ login }}</p>
+      </div>
+      <div class="form-row">
+        <label for="username">Логин (уникальный)</label>
+        <input type="text" id="username" name="username" required autocomplete="username">
+        <p class="field-error">{{ login }}</p>
+      </div>
+      <div class="form-row">
+        <label for="reg_password">Пароль (минимум 5 символов)</label>
+        <input type="password" id="reg_password" name="password" minlength="5" required autocomplete="new-password">
+        <p class="field-error">{{ login }}</p>
+      </div>
+      <button type="submit" class="btn btn--primary">Зарегистрироваться</button>
+    </form>
+  </main>
+</body>
+</html>

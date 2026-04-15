@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Традиции народов — главная</title>
+    <link rel="stylesheet" href="/static/tradicii.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="site-logo" href="index.html">
+        <img src="/static/media/logo.svg" width="180" height="48" alt="">
+        <span class="badge-year">2026 · Год единства народов России</span>
+      </a>
+      <nav class="main-nav" aria-label="Основное меню">
+        <a href="index.html">Каталог</a>
+        <a href="login.html">Вход</a>
+        <a href="register.html" style="">Регистрация</a>
+        <a href="cabinet_user.html">Кабинет (автор)</a>
+        <a href="cabinet_representative.html">Кабинет (представитель)</a>
+        <a href="admin.html">Администрирование</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-hero">
+      <h1>Традиции народов России</h1>
+      <p>Публичный каталог одобренных традиций. 8 карточек на страницу, фильтр по народу, поиск и сортировка — логика на сервере.</p>
+    </div>
+
+    <form class="toolbar" method="get" action="index.html">
+      <div>
+        <label for="filter-people">Народ</label>
+        <select id="filter-people" name="people_id">
+          <option value="">Все народы</option>
+          <option value="1">Русские</option>
+          <option value="2">Татары</option>
+          <option value="3">Башкиры</option>
+        </select>
+      </div>
+      <div>
+        <label for="search-q">Поиск по названию</label>
+        <input type="search" id="search-q" name="q" placeholder="Например: масленица">
+      </div>
+      <div>
+        <label for="sort-by">Сортировка</label>
+        <select id="sort-by" name="sort">
+          <option value="new_desc">По новизне (сначала новые)</option>
+          <option value="new_asc">По новизне (сначала старые)</option>
+          <option value="title_asc">По названию А→Я</option>
+          <option value="title_desc">По названию Я→А</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn--primary">Применить</button>
+    </form>
+
+    <section class="traditions-grid" aria-label="Список традиций">
+      <!-- Повторить для каждой традиции (пример: 8 шт. на страницу) -->
+      {% for i in data %}
+      <article class="tradition-card">
+        <img class="tradition-card__img" src="media/img/traditions/{{i.4}}" alt="">
+        <div class="tradition-card__body">
+          <h2 class="tradition-card__title"><a href="tradition.html">{{ i.1 }}</a></h2>
+          <p class="tradition-card__people">Народ: {{ i.2 }}</p>
+          <p class="tradition-card__excerpt">{{ i.6 }}</p>
+          <div class="tradition-card__thumbs" aria-hidden="true">
+            <img src="media/img/traditions/{{i.5.1}}" alt="">
+            <img src="media/img/traditions/{{i.5.2}}" alt="">
+          </div>
+          <p class="tradition-card__meta">Автор: {{i.7}}</p>
+          <a class="btn btn--outline btn--sm" href="tradition.html">Подробнее</a>
+        </div>
+      </article>
+      {% endfor %}
+
+    </section>
+
+    <nav class="pagination" aria-label="Страницы">
+      <span class="is-current" aria-current="page">1</span>
+      <a href="index.html?page=2">2</a>
+      <a href="index.html?page=3">3</a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Модуль Б «Традиции народов» — заготовка вёрстки. Интеграция с Django/Laravel: подстановка данных и форм.</p>
+    </div>
+  </footer>
+</body>
+</html>

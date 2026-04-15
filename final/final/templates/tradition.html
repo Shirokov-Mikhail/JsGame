@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Традиция — просмотр</title>
+  <link rel="stylesheet" href="static/css/tradicii.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="site-logo" href="index.html"><img src="media/img/logo.svg" width="180" height="48" alt=""></a>
+      <nav class="main-nav">
+        <a href="index.html">Каталог</a>
+        <a href="login.html">Вход</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding:24px 20px 48px;">
+    <article>
+      <h1 id="tradition-title">Масленичная неделя</h1>
+      <p><strong>Народ:</strong> <span id="tradition-people">русские</span></p>
+      <p id="tradition-desc" style="max-width:70ch;">Полное описание традиции от 30 до 250 символов в задании на сущность; здесь заглушка для вёрстки карточки традиции.</p>
+      <p><strong>Автор:</strong> <span id="tradition-author">Иван Иванов</span></p>
+
+      <section style="margin:24px 0;" aria-label="Фотографии">
+        <h2 class="visually-hidden" style="position:absolute;clip:rect(0 0 0 0);">Галерея</h2>
+        <img src="media/img/traditions/t-01.svg" alt="Главное" style="width:100%;max-width:720px;border-radius:12px;border:1px solid var(--border);">
+        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+          <img src="media/img/traditions/t-02.svg" alt="" width="120" height="75" style="object-fit:cover;border-radius:8px;">
+          <img src="media/img/traditions/t-03.svg" alt="" width="120" height="75" style="object-fit:cover;border-radius:8px;">
+          <img src="media/img/traditions/t-04.svg" alt="" width="120" height="75" style="object-fit:cover;border-radius:8px;">
+        </div>
+      </section>
+
+      <section class="comments-layout" aria-label="Комментарии">
+        <div class="comments-panel comments-panel--left">
+          <h3>Диалог модераторов (админ / представитель народа)</h3>
+          <div class="comment">
+            <div class="comment__meta">Представитель · 05.04.2026 14:30:00</div>
+            <div>Материал проверен, можно обсуждать с сообществом.</div>
+          </div>
+          <div class="comment">
+            <div class="comment__meta">Администратор · 05.04.2026 15:02:11</div>
+            <div>Согласовано для публикации.</div>
+          </div>
+        </div>
+        <div class="comments-panel comments-panel--right">
+          <h3>Комментарии пользователей</h3>
+          <div class="comment">
+            <div class="comment__meta">Пользователь · 06.04.2026 10:00:00</div>
+            <div>Очень интересно, спасибо за описание!</div>
+          </div>
+          <form method="post" action="#" class="form-grid" style="margin-top:16px;max-width:none;">
+            <div class="form-row">
+              <label for="comment_text">Ваш комментарий (только для авторизованных)</label>
+              <textarea id="comment_text" name="body" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn--primary btn--sm">Отправить</button>
+          </form>
+        </div>
+      </section>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container"><p>Удаление комментариев — только у администратора (кнопки добавить в шаблон при интеграции).</p></div>
+  </footer>
+</body>
+</html>

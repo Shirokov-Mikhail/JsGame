@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кабинет пользователя</title>
+  <link rel="stylesheet" href="static/css/tradicii.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="site-logo" href="index.html"><img src="media/img/logo.svg" width="180" height="48" alt=""></a>
+      <nav class="main-nav">
+        <a href="index.html">Каталог</a>
+        <a href="login.html">Выход</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding:24px 20px 48px;">
+    <h1>Мои традиции</h1>
+
+    <table class="data-table" style="margin-bottom:32px;">
+      <thead>
+        <tr>
+          <th>Название</th>
+          <th>Статус</th>
+          <th>Причина отклонения</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Новый обряд весны</td>
+          <td><span class="status status--draft">Черновик</span></td>
+          <td>—</td>
+          <td><a href="#">Редактировать</a></td>
+        </tr>
+        <tr>
+          <td>Сабантуй (черновик)</td>
+          <td><span class="status status--pending">Ожидает модерации</span></td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Старый материал</td>
+          <td><span class="status status--rejected">Отклонено</span></td>
+          <td>Недостаточно источников</td>
+          <td><a href="#">Исправить и снова на модерацию</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Новая традиция</h2>
+    <form method="post" action="#" enctype="multipart/form-data" class="form-grid" style="max-width:640px;">
+      <div class="form-row">
+        <label for="title">Название (5–120 символов, уникальное)</label>
+        <input type="text" id="title" name="title" minlength="5" maxlength="120" required>
+      </div>
+      <div class="form-row">
+        <label for="description">Описание (30–250 символов)</label>
+        <textarea id="description" name="description" minlength="30" maxlength="250" required></textarea>
+      </div>
+      <div class="form-row">
+        <label for="people_id">Народ</label>
+        <select id="people_id" name="people_id" required>
+          <option value="">Выберите народ</option>
+          <option value="1">Русские</option>
+          <option value="2">Татары</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="main_image">Главное изображение (обязательно, до 1 МБ)</label>
+        <input type="file" id="main_image" name="main_image" accept=".jpg,.jpeg,.png,.webp" required>
+      </div>
+      <div class="form-row">
+        <label for="extra_images">Дополнительные (до 3 файлов)</label>
+        <input type="file" id="extra_images" name="extra_images" accept=".jpg,.jpeg,.png,.webp" multiple>
+      </div>
+      <div class="btn-group" style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button type="submit" name="action" value="draft" class="btn btn--outline">Сохранить черновик</button>
+        <button type="submit" name="action" value="moderate" class="btn btn--primary">Отправить на модерацию</button>
+      </div>
+    </form>
+  </main>
+</body>
+</html>

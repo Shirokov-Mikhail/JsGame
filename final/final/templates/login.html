@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход — Традиции народов</title>
+    <link rel="stylesheet" href="/static/tradicii.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="site-logo" href="index.html">
+        <img src="/static/media/logo.svg" width="180" height="48" alt="">
+      </a>
+      <nav class="main-nav">
+        <a href="/">На главную</a>
+        <a href="/registration/">Регистрация</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:480px;padding:40px 20px;">
+    <h1>Вход</h1>
+    <form method="post" class="form-grid">
+      {% csrf_token %}
+      <div class="form-row">
+        <label for="login">Логин</label>
+        <input type="text" id="login" name="login" required autocomplete="username">
+        <p class="field-error">{{ login }}</p>
+      </div>
+      <div class="form-row">
+        <label for="password">Пароль</label>
+        <input type="password" id="password" name="password" required autocomplete="current-password">
+        <p class="field-error">{{ password }}</p>
+      </div>
+      <button type="submit" class="btn btn--primary">Войти</button>
+    </form>
+    <p style="margin-top:24px;color:var(--muted);font-size:0.9rem;">Тестовый администратор: <code>admin</code> / <code>admin2026</code></p>
+  </main>
+</body>
+</html>
