@@ -621,26 +621,20 @@ start_btn.addEventListener("click", function () {
     requestAnimationFrame(start_eng)
 })
 async function sendResult() {
-    const data_ico = new Date().toISOString()
-    let data = {
-        client: "Misha",
-        name: name,
-        time: sec / 60 + min
-    }
+
     try {
-        let res = await fetch(` http://ссылка:8082/api/expedition`, {
-            'method': 'POST',
-            "headers": {
+        let res = await fetch(`http://46.21.245.117:6060/players`, {
+            method: 'POST',
+            headers: {
                 'Content-Type': 'application/json'
             },
-            "body": {
-                "client": 'Misha',
+            body: JSON.stringify({
                 "name": `${name}`,
-                "time": `${sec / 60 + min}`,
-                "crystals": `${cristal_val}`,
-                "timestamp": `${data_ico.getTime()}`,
-            }
+                "play_duration": min + sec * 60,
+                "crystals": cristal_val,
+            })
         })
+        console.log(res)
         if (res.ok){
             console.log('Результат сохранен')
         }else {
@@ -652,7 +646,6 @@ async function sendResult() {
         alert(error)
     }
     }
-
 retry_btn.addEventListener("click", () => {
     console.log("retry_btn")
     end_game = false;
@@ -703,4 +696,8 @@ back_btn.addEventListener("click", () => {
     result_screen.style.display = 'none'
     start_screen.style.display = 'flex'
     countdown_text.innerText = '3'
+})
+save_btn.addEventListener("click", () => {
+    console.log("save_btn")
+    sendResult()
 })
